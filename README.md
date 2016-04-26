@@ -1,2 +1,2 @@
-# bednbugs
+# BednBugs
 Mashup Hôtels + Avis
