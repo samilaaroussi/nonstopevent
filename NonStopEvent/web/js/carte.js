@@ -16,6 +16,7 @@ var countryRestrict = {'country': 'us'};
 var MARKER_PATH = 'https://maps.gstatic.com/intl/en_us/mapfiles/marker_green';
 var hostnameRegexp = new RegExp('^https?://.+?/');
 
+var events = [];
 var countries = {
   'au': {
     center: {lat: -25.3, lng: 133.8},
@@ -116,37 +117,31 @@ function onPlaceChanged() {
 }
 
 // Search for hotels in the selected city, within the viewport of the map.
-function show_events( result) {
-  var search = {
-    bounds: map.getBounds(),
-    types: ['lodging']
-  };
-  places.nearbySearch(search, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
+function show_events( ) {
+
       clearResults();
       clearMarkers();
       // Create a marker for each event found, and
       // assign a letter of the alphabetic to each marker icon.
-      for (var i = 0; i < results.length; i++) {
+      for (var i = 0; i < events.length; i++) {
         var markerLetter = String.fromCharCode('A'.charCodeAt(0) + i);
         var markerIcon = MARKER_PATH + markerLetter + '.png';
         // Use marker animation to drop the icons incrementally on the map.
         //alert(results[i].latitude + "  " + results[i].longitude);
+        var myLatlng = new google.maps.LatLng(parseFloat(events[i].latitude),parseFloat(events[i].longitude));
         markers[i] = new google.maps.Marker({
-          position: {lat: results[i].latitude, lng: results[i].longitude},
+          position: myLatlng,
           animation: google.maps.Animation.DROP,
-          icon: markerIcon
+          icon: markerIcon,
+          title:events[i].title
         });
-        // If the user clicks a hotel marker, show the details of that hotel
+        // If the user clicks a event marker, show the details of that hotel
         // in an info window.
-        markers[i].placeResult = results[i];
-        google.maps.event.addListener(markers[i], 'click', showInfoWindow);
         setTimeout(dropMarker(i), i * 100);
-        addResult(results[i], i);
+        addResult(events[i], i);
       }
     }
-  });
-}
+
 
 function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
@@ -199,9 +194,12 @@ function addResult(result, i) {
   icon.src = markerIcon;
   icon.setAttribute('class', 'placeIcon');
   icon.setAttribute('className', 'placeIcon');
-  var name = document.createTextNode(result.title);
+  var createA = document.createElement('a');
+  var createAText = document.createTextNode(result.title);
+  createA.setAttribute('href', "event.html?id="+result.id);
+  createA.appendChild(createAText);
   iconTd.appendChild(icon);
-  nameTd.appendChild(name);
+  nameTd.appendChild(createA);
   tr.appendChild(iconTd);
   tr.appendChild(nameTd);
   results.appendChild(tr);
@@ -211,70 +209,6 @@ function clearResults() {
   var results = document.getElementById('results');
   while (results.childNodes[0]) {
     results.removeChild(results.childNodes[0]);
-  }
-}
-
-// Get the place details for a hotel. Show the information in an info window,
-// anchored on the marker for the hotel that the user selected.
-function showInfoWindow() {
-  var marker = this;
-  places.getDetails({placeId: marker.placeResult.place_id},
-      function(place, status) {
-        if (status !== google.maps.places.PlacesServiceStatus.OK) {
-          return;
-        }
-        infoWindow.open(map, marker);
-        buildIWContent(place);
-      });
-}
-
-// Load the place information into the HTML elements used by the info window.
-function buildIWContent(place) {
-  document.getElementById('iw-icon').innerHTML = '<img class="hotelIcon" ' +
-      'src="' + place.icon + '"/>';
-  document.getElementById('iw-url').innerHTML = '<b><a href="' + place.url +
-      '">' + place.name + '</a></b>';
-  document.getElementById('iw-address').textContent = place.vicinity;
-
-  if (place.formatted_phone_number) {
-    document.getElementById('iw-phone-row').style.display = '';
-    document.getElementById('iw-phone').textContent =
-        place.formatted_phone_number;
-  } else {
-    document.getElementById('iw-phone-row').style.display = 'none';
-  }
-
-  // Assign a five-star rating to the hotel, using a black star ('&#10029;')
-  // to indicate the rating the hotel has earned, and a white star ('&#10025;')
-  // for the rating points not achieved.
-  if (place.rating) {
-    var ratingHtml = '';
-    for (var i = 0; i < 5; i++) {
-      if (place.rating < (i + 0.5)) {
-        ratingHtml += '&#10025;';
-      } else {
-        ratingHtml += '&#10029;';
-      }
-    document.getElementById('iw-rating-row').style.display = '';
-    document.getElementById('iw-rating').innerHTML = ratingHtml;
-    }
-  } else {
-    document.getElementById('iw-rating-row').style.display = 'none';
-  }
-
-  // The regexp isolates the first part of the URL (domain plus subdomain)
-  // to give a short URL for displaying in the info window.
-  if (place.website) {
-    var fullUrl = place.website;
-    var website = hostnameRegexp.exec(place.website);
-    if (website === null) {
-      website = 'http://' + place.website + '/';
-      fullUrl = website;
-    }
-    document.getElementById('iw-website-row').style.display = '';
-    document.getElementById('iw-website').textContent = website;
-  } else {
-    document.getElementById('iw-website-row').style.display = 'none';
   }
 }
 
@@ -295,7 +229,21 @@ function get_events()
   EVDB.API.call("/events/search", oArgs, function(oData) {
 
       // Note: this relies on the custom toString() methods below
-      show_events(oData.events);
+      
+      for(var i=0;i < oData.events.event.length; i++)
+      {
+          events[i] = new Object();
+          events[i].latitude = oData.events.event[i].latitude;
+          events[i].longitude = oData.events.event[i].longitude;
+          events[i].title = oData.events.event[i].title;
+          events[i].id = oData.events.event[i].id;
+          events[i].start_time = oData.events.event[i].start_time;
+          events[i].stop_time = oData.events.event[i].stop_time;
+          events[i].venue_address = oData.events.event[i].venue_address;
+          
+      }
+     
+      show_events();
     });
 
 }
