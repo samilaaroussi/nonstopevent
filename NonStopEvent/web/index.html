@@ -158,76 +158,16 @@
       </div>
     </div>
 
-    <script src="js/carte.js"> </script>
+    <script type="text/javascript" src="js/carte.js"> </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=initMap"
         async defer></script>
         
+    <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
 
-
-<script type="text/javascript" src="http://api.eventful.com/js/api">
-
-</script>
-
-<script type="text/javascript">
-
-function show_alert()
-
-{
-
-  var oArgs = {
-
-            app_key:"MBsKVhQWhpZSW9MP",
-
-            id: "20218701",
-
-            page_size: 25 ,
-
-  };
-
-  EVDB.API.call("/events/get", oArgs, function(oData) {
-
-      // Note: this relies on the custom toString() methods below
-
-    });
-
-}
-
-
-
-function show_alert2()
-
-{
-
-   var oArgs = {
-
-      app_key: "MBsKVhQWhpZSW9MP",
-
-      q: "music",
-
-      where: "San Diego", 
-
-      "date": "2013061000-2015062000",
-
-      page_size: 5,
-
-      sort_order: "popularity",
-
-   };
-
-   EVDB.API.call("/events/search", oArgs, function(oData) {
-
-      // Note: this relies on the custom toString() methods below
-
-    });
-
-}
-
-</script>
 Run Sample api searches <br><br>
 
-<input type="button" onclick="show_alert()" value="Query #1 " /> <br>
+<input type="button" onclick="get_events()" value="Show Events " /> <br>
 
-<input type="button" onclick="show_alert2()" value="Query #2 " /> <br>
 
 
   </body>

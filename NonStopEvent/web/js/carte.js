@@ -109,31 +109,31 @@ function onPlaceChanged() {
   if (place.geometry) {
     map.panTo(place.geometry.location);
     map.setZoom(15);
-    search();
+    get_events();
   } else {
     document.getElementById('autocomplete').placeholder = 'Enter a city';
   }
 }
 
 // Search for hotels in the selected city, within the viewport of the map.
-function search() {
+function show_events( result) {
   var search = {
     bounds: map.getBounds(),
     types: ['lodging']
   };
-
   places.nearbySearch(search, function(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       clearResults();
       clearMarkers();
-      // Create a marker for each hotel found, and
+      // Create a marker for each event found, and
       // assign a letter of the alphabetic to each marker icon.
       for (var i = 0; i < results.length; i++) {
         var markerLetter = String.fromCharCode('A'.charCodeAt(0) + i);
         var markerIcon = MARKER_PATH + markerLetter + '.png';
         // Use marker animation to drop the icons incrementally on the map.
+        //alert(results[i].latitude + "  " + results[i].longitude);
         markers[i] = new google.maps.Marker({
-          position: results[i].geometry.location,
+          position: {lat: results[i].latitude, lng: results[i].longitude},
           animation: google.maps.Animation.DROP,
           icon: markerIcon
         });
@@ -199,7 +199,7 @@ function addResult(result, i) {
   icon.src = markerIcon;
   icon.setAttribute('class', 'placeIcon');
   icon.setAttribute('className', 'placeIcon');
-  var name = document.createTextNode(result.name);
+  var name = document.createTextNode(result.title);
   iconTd.appendChild(icon);
   nameTd.appendChild(name);
   tr.appendChild(iconTd);
@@ -278,3 +278,24 @@ function buildIWContent(place) {
   }
 }
 
+function get_events()
+{
+    var l = document.getElementById('autocomplete').value;
+  var oArgs = {
+
+            app_key:"MBsKVhQWhpZSW9MP",
+
+            location: l,
+
+            page_size: 10 ,
+            
+            page_number: 1
+  };
+
+  EVDB.API.call("/events/search", oArgs, function(oData) {
+
+      // Note: this relies on the custom toString() methods below
+      show_events(oData.events);
+    });
+
+}
