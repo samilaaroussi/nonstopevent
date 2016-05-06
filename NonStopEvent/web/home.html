@@ -26,8 +26,6 @@
             <div class="collapse navbar-collapse" id="myNavbar">
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="#search">HOME</a></li>
-                <li><a href="#services">SERVICES</a></li>
-                <li><a href="#portfolio">PORTFOLIO</a></li>
                 <li><a href="#about">ABOUT</a></li>
                 <li><a href="#contact">CONTACT</a></li>
               </ul>
@@ -56,7 +54,7 @@
                 <option value="us">U.S.A.</option>
                 <option value="uk">United Kingdom</option>
             </select>
-            <button type="button" class="btn btn-danger">Rechercher</button>
+            <button type="button" class="btn btn-danger" onclick="search();">Rechercher</button>
         </form>
     </div>
     <!-- liste des evenements---------------------------------------------------->
@@ -81,7 +79,7 @@
 </body>
 </html>
     <script type="text/javascript" src="js/autocomplete.js"> </script>
-    <script type="text/javascript" src="js/GetEvents.js"> </script>
+    <script type="text/javascript" src="js/GetPopEvents.js"> </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=init"
         async defer></script>
     <script type="text/javascript" src="http://api.eventful.com/js/api"></script>

@@ -23,7 +23,7 @@ function init(){
 function onPlaceChanged() {
   var place = autocomplete.getPlace();
   if (place.geometry) {
-      document.cookie = "ville=John Doe"
+      //document.cookie = "ville="
       get_pop_events();
   } else {
     document.getElementById('autocomplete').placeholder = 'Ville';
@@ -35,4 +35,10 @@ function setAutocompleteCountry() {
   var country = document.getElementById('country').value;
   autocomplete.setComponentRestrictions({'country': country});
 
+}
+
+function search()
+{
+      var l = document.getElementById('autocomplete').value;
+      window.location.href = "events.html?l="+l;
 }

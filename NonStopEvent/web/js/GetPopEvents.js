@@ -109,7 +109,7 @@ function show_more_events(debut, fin)
     div.id = events[i].id;
     div.className = "thumbnail";
     div.style.cursor = 'pointer';
-    div.onclick = function(){ window.location.href = "event.html?id="+ this.id};
+    div.onclick = function(){ window.location.href = "event.html?id="+ this.id+'&l='+ document.getElementById('autocomplete').value;};
     div.onmouseover = function() { this.style.backgroundColor = '#c2c2d6';};
     div.onmouseout = function() { this.style.backgroundColor = '';};
     var img = document.createElement("img");
@@ -144,3 +144,4 @@ function clear_pop_events()
         pop_events_container.removeChild(pop_events_divs[i]);
     }
 }
+
