@@ -62,42 +62,29 @@
     <!-- liste des evenements---------------------------------------------------->
     <div class="container-fluid text-center bg-grey">
         <h2>Evenements Populaires</h2>
-        <div class="row text-center">
-          <div class="col-sm-4">
-            <div class="thumbnail">
-              <img src="paris.jpg" alt="Paris">
-              <p><strong>Event 1</strong></p>
-              <p>description</p>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="thumbnail">
-              <img src="newyork.jpg" alt="New York">
-              <p><strong>Event 2</strong></p>
-              <p>description</p>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="thumbnail">
-              <img src="sanfran.jpg" alt="San Francisco">
-              <p><strong>Event 3</strong></p>
-              <p>description</p>
-            </div>
-          </div>
-    </div>
-        
+        <div class="row text-center" id="pop_events">
+          
+        </div>
+        <div class="row text-center" hidden="true" id="more">
+            <h3><span class="label label-default" onclick="get_more_pop_events();">More...</span></h3>
+        </div>
+    </div>       
+
+    
     <!----------------------footer----------------------------->
     <footer class="container-fluid text-center">
-      <a href="#myPage" title="To Top">
+      <a href="#search" title="To Top">
         <span class="glyphicon glyphicon-chevron-up"></span>
       </a>
-      <p>Bootstrap Theme Made By <a href="http://www.w3schools.com" title="Visit w3schools">www.univ-lyon1.fr</a></p> 
+      <p>NonStop Event Made By <a href="http://www.univ-lyon1.fr" title="Visit Claude Bernand University">www.univ-lyon1.fr</a></p> 
     </footer>
 </body>
 </html>
     <script type="text/javascript" src="js/autocomplete.js"> </script>
+    <script type="text/javascript" src="js/GetEvents.js"> </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=init"
         async defer></script>
+    <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
 <!--search -->
 <style>
 .jumbotron { 

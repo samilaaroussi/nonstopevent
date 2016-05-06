@@ -23,9 +23,12 @@ function init(){
 function onPlaceChanged() {
   var place = autocomplete.getPlace();
   if (place.geometry) {
+      document.cookie = "ville=John Doe"
+      get_pop_events();
   } else {
     document.getElementById('autocomplete').placeholder = 'Ville';
   }
+  
 }
 
 function setAutocompleteCountry() {
