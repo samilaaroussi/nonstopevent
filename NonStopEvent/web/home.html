@@ -40,9 +40,21 @@
         <p>We help you prepare for an event</p> 
         <!--search bar-------------------------------------------------->
         <form class="form-inline">
-            <input type="text" class="form-control" size="50" placeholder="Ville" id="city">
+            <input type="text" class="form-control" size="50" placeholder="Ville" id="autocomplete">
             <select class="form-control" id="country">   
-                <option value="" disabled selected hidden>Pay</option>
+                <option value="au">Australia</option>
+                <option value="br">Brazil</option>
+                <option value="ca">Canada</option>
+                <option value="fr" selected>France</option>
+                <option value="de">Germany</option>
+                <option value="mx">Mexico</option>
+                <option value="nz">New Zealand</option>
+                <option value="it">Italy</option>
+                <option value="za">South Africa</option>
+                <option value="es">Spain</option>
+                <option value="pt">Portugal</option>
+                <option value="us">U.S.A.</option>
+                <option value="uk">United Kingdom</option>
             </select>
             <button type="button" class="btn btn-danger">Rechercher</button>
         </form>
@@ -83,6 +95,9 @@
     </footer>
 </body>
 </html>
+    <script type="text/javascript" src="js/autocomplete.js"> </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=init"
+        async defer></script>
 <!--search -->
 <style>
 .jumbotron { 
