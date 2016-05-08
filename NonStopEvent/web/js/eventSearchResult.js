@@ -66,12 +66,16 @@ function show_events(page_number)
         var heading_div = document.createElement("div");
         var title_h4 = document.createElement("h4");
         var title_a = document.createElement("a");
+        var title_img = document.createElement("img");
+            if(events[page_number][i].image.url === null)
+                events[page_number][i].image.url = "images/imageNotFound.jpg";
+        title_img.src = events[page_number][i].image.url;
         
         title_a.setAttribute("data-toggle","collapse");
         title_a.setAttribute("data-parent","#result");
-        title_a.setAttribute("href","#"+events[page_number][i].id);
+        //title_a.setAttribute("href","#"+events[page_number][i].id);
+        title_a.setAttribute("href","#"+i);
         title_a.innerHTML = events[page_number][i].title;
-        //title_a.setAttribute("aria-expanded","false");
         title_h4.setAttribute("class","panel-title");
         
         heading_div.setAttribute("class","panel-heading");
@@ -80,15 +84,25 @@ function show_events(page_number)
         
         var collapse_div = document.createElement("div");
         var body_div = document.createElement("div");
-        
-        collapse_div.setAttribute("id",events[page_number][i].id);
-        collapse_div.setAttribute("class","panel-collapse collapse in");
-        //collapse_div.setAttribute("aria-expanded","false");
+        var table = document.createElement("table");
+        table.setAttribute("class","table table-hover");
+        table.innerHTML = "<tbody>";
+        table.innerHTML +="<tr><td>From:</td><td>"+events[page_number][i].start_time + "</td></tr>";
+        table.innerHTML +="<tr><td>To:</td><td>"+events[page_number][i].end_time + "</td></tr>";
+        table.innerHTML +="<tr><td>Address:</td><td>"+events[page_number][i].venue_address + "</td></tr>";
+        table.innerHTML += "<tr><td><a href='event.html?id="+ events[page_number][i].id + "'>Plus information</a></td></tr>"
+        table.innerHTML +="</tbody>";
+        //collapse_div.setAttribute("id",events[page_number][i].id);
+        collapse_div.setAttribute("id",""+i);
+        collapse_div.setAttribute("class","panel-collapse collapse");
+
         
         body_div.setAttribute("class","panel-body");
-        body_div.innerHTML = events[page_number][i].description;
+        body_div.appendChild(table);
          
+        title_a.appendChild(title_img);
         title_h4.appendChild(title_a);
+        
         heading_div.appendChild(title_h4);
         collapse_div.appendChild(body_div);
 
