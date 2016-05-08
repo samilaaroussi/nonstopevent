@@ -70,12 +70,12 @@ function eventinfos()
         // Note: this relies on the custom toString() methods below
         var eventTitle = oData.title;
         var eventStart = oData.description;
-        var eventEnd = oData.start_time;
-        var eventPic = oData.stop_time;
+        var eventStart = oData.start_time;
+        var eventEnd = oData.stop_time;
 
-        $('#title').html("Title");
-        $('.start').html("Start");
-        $('.end').html("Event");
+        $('#title').html("<h1>" + eventTitle + "</h1>");
+        $('.start').html(eventStart);
+        $('.end').html(eventEnd);
 
     });
 
