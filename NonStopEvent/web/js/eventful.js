@@ -63,19 +63,24 @@ function eventinfos()
 
         page_size: 25,
 
+        image_sizes: "block100,large,block250",
+
     };
 
     EVDB.API.call("/events/get", oArgs, function(oData) {
 
         // Note: this relies on the custom toString() methods below
         var eventTitle = oData.title;
-        var eventStart = oData.description;
-        var eventStart = oData.start_time;
-        var eventEnd = oData.stop_time;
+        var eventCity = oData.city;
+        var eventStart = new Date(oData.start_time);
+        var eventEnd = new Date(oData.stop_time);
 
-        $('#title').html("<h1>" + eventTitle + "</h1>");
-        $('.start').html(eventStart);
-        $('.end').html(eventEnd);
+        $('#title').html("<h1>" + eventTitle + "<small> à " + eventCity +"</small></h1>" );
+        $('.photos').html("<img src=" + oData.images.image[0].block250.url + "\/>");
+        $('.location').html(oData.venue_name);
+        $('.start').html("Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
+
+
 
     });
 
