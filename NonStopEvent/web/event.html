@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/weatherIcons/css/weather-icons.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
@@ -24,10 +25,51 @@
             accessToken: '523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e',
             target: 'insta',
             resolution: 'standard_resolution',
-            limit: 12,
+            limit: 6,
             template: '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 nopadding"><a href="{{link}}" target="_blank"><img src="{{image}}" class="img-responsive" /></a></div>'
         });
         feed.run();
+    </script>
+
+    <script type="text/javascript">
+
+
+        function readTextFile(file, callback) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.overrideMimeType("application/json");
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function() {
+                if (rawFile.readyState === 4 && rawFile.status == "200") {
+                    callback(rawFile.responseText);
+                }
+            }
+            rawFile.send(null);
+        }
+
+        var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ae29dcbbd7d458f1d3ef66feb83120b7');
+
+        //usage:
+        readTextFile("styles/weatherIcons/weatherIcons.json", function(text){
+
+            var weatherIcons = JSON.parse(text);
+            req.then(function(resp) {
+                var prefix = 'wi wi-';
+                var code = resp.weather[0].id;
+                var icon = weatherIcons[code].icon;
+
+                // If we are not in the ranges mentioned above, add a day/night prefix.
+                if (!(code > 699 && code < 800) && !(code > 899 && code < 1000)) {
+                    icon = 'day-' + icon;
+                }
+
+                // Finally tack on the prefix.
+                icon = prefix + icon;
+                var v = document.getElementById('weather');
+                v.setAttribute("class",icon);
+            });
+        });
+
+
     </script>
 </head>
 <body onload="eventinfos();">
@@ -77,6 +119,7 @@
                         <i class="fa fa-map-marker" aria-hidden="true"></i> <span class="location"></span>
                     </li>
                     <li class="start"></li>
+                    <li><i id="weather"></i></li>
                 </ul>
             </div>
         </div>
@@ -90,6 +133,5 @@
         <div class="container">Google Maps là</p>
     </div>
 </div>
-</body>
 </body>
 </html>
