@@ -6,6 +6,11 @@ li {
     list-style-type: none;
 }
 
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 #insta {
     background: orangered;
 }

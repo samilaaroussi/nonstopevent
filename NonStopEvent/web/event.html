@@ -15,7 +15,20 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
     <script src="js/eventful.js"></script>
-
+    <script type="text/javascript" src="js/instafeed.min.js"></script>
+    <script type="text/javascript">
+        var feed = new Instafeed({
+            get: 'tagged',
+            tagName: 'radiohead',
+            clientId: 'b7699de0ea314370aeb5466a86505c85',
+            accessToken: '523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e',
+            target: 'insta',
+            resolution: 'standard_resolution',
+            limit: 12,
+            template: '<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 nopadding"><a href="{{link}}" target="_blank"><img src="{{image}}" class="img-responsive" /></a></div>'
+        });
+        feed.run();
+    </script>
 </head>
 <body onload="eventinfos();">
 <nav class="navbar navbar-inverse navbar-static-top">
@@ -51,9 +64,7 @@
     </div>
 </nav>
 
-<div class="row" id="insta">
-    <div class="container">Galerie Instagram</div>
-</div>
+<div class="row" id="insta"></div>
 
 <div class="row" id="desc">
     <div class="container">
