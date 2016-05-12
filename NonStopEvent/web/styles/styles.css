@@ -1,5 +1,9 @@
 .navbar{
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
+}
+
+.panel-height {
+    height: 2%; / change according to your requirement/
 }
 
 li {

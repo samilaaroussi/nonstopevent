@@ -47,13 +47,24 @@ function eventpage()
 
 }
 
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
 function eventinfos()
 
 {
 
     var url = document.URL;
     var id = url.substring(url.lastIndexOf('id=') + 1);
-    alert(id); // 234234234
 
     var oArgs = {
 
@@ -63,7 +74,7 @@ function eventinfos()
 
         page_size: 25,
 
-        image_sizes: "block100,large,block250",
+        image_sizes: "block100,block178,large,block250",
 
     };
 
@@ -76,7 +87,7 @@ function eventinfos()
         var eventEnd = new Date(oData.stop_time);
 
         $('#title').html("<h1>" + eventTitle + "<small> à " + eventCity +"</small></h1>" );
-        $('.photos').html("<img src=" + oData.images.image[0].block250.url + "\/>");
+        $('.photos').html("<img src=" + oData.images.image[0].block178.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
 
@@ -84,8 +95,34 @@ function eventinfos()
 
     });
 
-}
+    var city = url.substring(url.lastIndexOf('l=') + 1);
+    var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ae29dcbbd7d458f1d3ef66feb83120b7&units=metric');
+    console.log(city);
+    //usage:
+    readTextFile("styles/weatherIcons/weatherIcons.json", function(text){
 
+        var weatherIcons = JSON.parse(text);
+        req.then(function(resp) {
+            var prefix = 'wi wi-';
+            var code = resp.weather[0].id;
+            var icon = weatherIcons[code].icon;
+            var deg = resp.main.temp;
+
+            $('.deg').html(deg + "°");
+            // If we are not in the ranges mentioned above, add a day/night prefix.
+            if (!(code > 699 && code < 800) && !(code > 899 && code < 1000)) {
+                icon = 'day-' + icon;
+            }
+
+            // Finally tack on the prefix.
+            icon = prefix + icon;
+            var v = document.getElementById('weather');
+            v.setAttribute("class",icon);
+        });
+    });
+
+
+}
 
 function show_alert2()
 

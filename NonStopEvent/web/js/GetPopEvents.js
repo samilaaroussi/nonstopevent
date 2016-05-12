@@ -107,9 +107,10 @@ function show_more_events(debut, fin)
     divContainer.className = "col-sm-4";
     var div = document.createElement("div");
     div.id = events[i].id;
+    div.city = events[i].city;
     div.className = "thumbnail";
     div.style.cursor = 'pointer';
-    div.onclick = function(){ window.location.href = "event.html?id="+ this.id+'&l='+ document.getElementById('autocomplete').value;};
+    div.onclick = function(){ window.location.href = "event.html?id="+ this.id;};
     div.onmouseover = function() { this.style.backgroundColor = '#c2c2d6';};
     div.onmouseout = function() { this.style.backgroundColor = '';};
     var img = document.createElement("img");
