@@ -86,10 +86,10 @@ function eventinfos()
         var eventStart = new Date(oData.start_time);
         var eventEnd = new Date(oData.stop_time);
 
-        $('#title').html("<h1>" + eventTitle + "<small> à " + eventCity +"</small></h1>" );
+        $('#title').html("<h2>" + eventTitle + "<small> à " + eventCity +"</small></h2>" );
         $('.photos').html("<img src=" + oData.images.image[0].block178.url + "\/>");
         $('.location').html(oData.venue_name);
-        $('.start').html("Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
+        $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
 
 
 

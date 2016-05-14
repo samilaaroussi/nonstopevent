@@ -32,7 +32,7 @@
     </script>
 </head>
 <body onload="eventinfos();">
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Non Stop Event</a>
+            <a class="navbar-brand" href="#"><i class="fa fa-music"></i> Non Stop Event</a>
         </div>
         <!---------------------menu-------------------->
         <div class="collapse navbar-collapse" id="myNavbar">
@@ -57,19 +57,24 @@
     <div class="row" id="insta"></div>
 </div>
 
-<div class="row" id="desc">
+<div class="row" id="desc" style="padding: 20px 0;">
     <div class="container">
-        <div class="col-md-8">
-            <div class="col-md-4 photos"></div>
-            <div class="col-md-8">
+        <div class="col-md-12">
+            <div class="col-md-3 photos"></div>
+            <div class="col-md-6">
                 <ul>
-                    <li id="title" class="page-header"></li>
+                    <li id="title"></li>
                     <li>
                         <i class="fa fa-map-marker" aria-hidden="true"></i> <span class="location"></span>
                     </li>
                     <li class="start"></li>
-                    <li><i id="weather"></i> <span class="deg"></span></li>
                 </ul>
+            </div>
+            <div class="col-md-3">
+
+                <h1>
+                    <i id="weather"></i> <span class="deg"></span>
+                </h1>
             </div>
         </div>
     </div>
