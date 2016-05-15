@@ -91,9 +91,7 @@ function eventinfos()
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
 
-            var city = url.substring(url.lastIndexOf('l=') + 1);
-    var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ae29dcbbd7d458f1d3ef66feb83120b7&units=metric');
-    console.log(city);
+    var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=' + eventCity + '&APPID=ae29dcbbd7d458f1d3ef66feb83120b7&units=metric');
     //usage:
     readTextFile("styles/weatherIcons/weatherIcons.json", function(text){
 
