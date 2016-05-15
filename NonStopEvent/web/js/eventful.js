@@ -85,27 +85,13 @@ function eventinfos()
         var eventCity = oData.city;
         var eventStart = new Date(oData.start_time);
         var eventEnd = new Date(oData.stop_time);
-        var i = 0;
-        eventTags= oData.tags;
-        eventTagss = "[";
-
-        while(eventTags.tag[i]) {
-            eventTagss = eventTagss + "\'" + eventTags.tag[i].id + "\',";
-            i = i+1;
-        }
-        eventTagss = eventTagss.substring(0, eventTagss.length - 1) + "]"
-        console.log(eventTagss);
 
         $('#title').html("<h2>" + eventTitle + "<small> à " + eventCity +"</small></h2>" );
         $('.photos').html("<img src=" + oData.images.image[0].block178.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
 
-
-
-    });
-
-    var city = url.substring(url.lastIndexOf('l=') + 1);
+            var city = url.substring(url.lastIndexOf('l=') + 1);
     var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=London&APPID=ae29dcbbd7d458f1d3ef66feb83120b7&units=metric');
     console.log(city);
     //usage:
@@ -130,6 +116,10 @@ function eventinfos()
             v.setAttribute("class",icon);
         });
     });
+
+
+    });
+
 
 
 }
@@ -159,33 +149,5 @@ function show_alert2()
         // Note: this relies on the custom toString() methods below
 
     });
-
-    function getMultipleTags (tags) {
-        var feeds = [];
-        for (var i=0, len=tags.length; i < len; i++) {
-            feeds.push(new Instafeed({
-                // rest of your options
-                get: 'tagged',
-                tagName: tags[i],
-                clientId: 'b7699de0ea314370aeb5466a86505c85',
-                accessToken: '523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e',
-                target: 'insta',
-                resolution: 'low_resolution',
-                limit: 24,
-                template: '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 nopadding">'
-            }));
-        }
-        return feeds;
-    }
-
-// get multiple tags
-    var myTags = getMultipleTags(eventTagss);
-    console.log
-    console.log(myTags);
-// run each instance
-    for(var i=0, len=myTags.length; i < len; i++) {
-        console.log(myTags[i]);
-        myTags[i].run();
-    }
 
 }
