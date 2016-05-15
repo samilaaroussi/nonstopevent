@@ -1,5 +1,6 @@
 .navbar {
     margin-bottom: 0 !important;
+    border-bottom: 4px solid #554FAF;
 }
 
 .navbar a {
@@ -32,27 +33,42 @@ li {
 }
 #desc {
 
-    background: #554FAF;
-    color: #fff;
+    background: #fff;
+    color: #333;
 }
 
 #desc img{
-    border: 5px solid #eee;
+
 }
 
 #desc small{
     color: #eee;
 }
 #twt{
-    background: blue;
+    background: #4099FF;
+    color: #fff;
 }
 
 #map{
-    background: red;
+    background: #1BA261;
+    color: #fff;
+}
+
+.deg {
+    font-size: 2em;
+    color: #554FAF;
 }
 
 .row.row-grid [class*="col-"] + [class*="col-"] {
     margin-top: 15px;
+}
+
+.fw-font {
+    font-size: 4em;
+}
+
+.fw-font span {
+    font-size: 2em;
 }
 
 @media (min-width: 1200px) {
