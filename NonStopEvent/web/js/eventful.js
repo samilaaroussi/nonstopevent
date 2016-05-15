@@ -86,6 +86,14 @@ function eventinfos()
         var eventCountry = oData.country;
         var eventStart = new Date(oData.start_time);
         var eventEnd = new Date(oData.stop_time);
+        var eventTags = oData.tags;
+        var eventTagss = [];
+        var i = 0;
+        while(eventTags.tag[i]) {
+            eventTagss.push(eventTags.tag[i].id);
+            i = i+1;
+        }
+        console.log(eventTagss);
 
         $('#title').html("<h2>" + eventTitle + "</h2>" );
         $('.photos').html("<img src=" + oData.images.image[0].block178.url + "\/>");
