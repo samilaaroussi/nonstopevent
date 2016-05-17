@@ -5,6 +5,9 @@ var page_count = 0;
 var current_page = 0;
 var result_divs = [];
 events[0] = [];
+var map;
+var markers = [];
+var infoWindows = [];
 function getAllEvents()
 {
   var l = getQueryString('l');
@@ -92,6 +95,7 @@ function show_events(page_number)
         table.innerHTML +="<tr><td>Address:</td><td>"+events[page_number][i].venue_address + "</td></tr>";
         table.innerHTML += "<tr><td><a href='event.html?id="+ events[page_number][i].id + "'>Plus information</a></td></tr>"
         table.innerHTML +="</tbody>";
+        
         //collapse_div.setAttribute("id",events[page_number][i].id);
         collapse_div.setAttribute("id",""+i);
         collapse_div.setAttribute("class","panel-collapse collapse");
@@ -99,7 +103,43 @@ function show_events(page_number)
         
         body_div.setAttribute("class","panel-body");
         body_div.appendChild(table);
-         
+        
+        //heading_div.setAttribute("longitude",events[page_number][i].longitude);
+        //heading_div.setAttribute("latitude",events[page_number][i].latitude);
+         var myLatLng = {lng: parseFloat(events[page_number][i].longitude),
+                    lat: parseFloat(events[page_number][i].latitude)};
+        var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+            });
+            
+        markers.push(marker);
+        var contentString = events[page_number][i].title;
+        var infowindow = new google.maps.InfoWindow({                   
+                    content: contentString
+        });
+        infoWindows.push(infowindow);
+        heading_div.onmouseover = function() {
+                var h4 = this.children[0];
+                var a = h4.children[0];
+                var href = a.getAttribute("href");
+                var index = parseInt(href.substring(1));
+                
+                map.setCenter(markers[index].position);
+                map.setZoom(12);
+                
+                
+                infoWindows[index].open(map, markers[index]);
+        };
+        heading_div.onmouseout = function(){
+                            var h4 = this.children[0];
+                var a = h4.children[0];
+                var href = a.getAttribute("href");
+                var index = parseInt(href.substring(1));
+                infoWindows[index].close();
+        };
+        
         title_a.appendChild(title_img);
         title_h4.appendChild(title_a);
         
@@ -111,7 +151,6 @@ function show_events(page_number)
         
         document.getElementById("result").appendChild(panel_div);
     }
-    
 }
 
 function getQueryString(name) {
@@ -119,3 +158,28 @@ function getQueryString(name) {
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
     }
+
+
+function initMap() {
+  
+  document.getElementById("right").style.height = document.getElementById("result").scrollHeight + "px";
+  var mapContainer = document.getElementById("mapContainer");
+  console.log(document.getElementById("right").clientWidth);
+  mapContainer.style.width = document.getElementById("right").clientWidth + "px";
+  mapContainer.style.height = '500px';
+  mapContainer.style.top= "100px";
+  mapContainer.setAttribute("data-spy","affix");
+  mapContainer.setAttribute("data-offset-top",document.getElementById("right").getBoundingClientRect().top); 
+  //get parametre l in url
+   var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'address': getQueryString('l')}, function(results, status) {
+    
+    if (status === google.maps.GeocoderStatus.OK) 
+    {
+        map = new google.maps.Map(document.getElementById('map'), {
+        center: results[0].geometry.location,
+        zoom: 10
+        });
+    }
+  }); 
+}
