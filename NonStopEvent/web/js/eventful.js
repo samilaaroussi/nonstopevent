@@ -1,27 +1,7 @@
 /**
  * Created by sami on 04/05/16.
  */
-function show_alert()
-
-{
-
-    var oArgs = {
-
-        app_key:"MBsKVhQWhpZSW9MP",
-
-        id: "20218701",
-
-        page_size: 25 ,
-
-    };
-
-    EVDB.API.call("/events/get", oArgs, function(oData) {
-
-        // Note: this relies on the custom toString() methods below
-
-    });
-
-}
+var map;
 
 function eventpage()
 
@@ -89,6 +69,8 @@ function eventinfos()
         var eventTags = oData.tags;
         var eventTagss = [];
         var i = 0;
+        var longitude = oData.longitude;
+        var latitude = oData.latitude;
         while(eventTags.tag[i]) {
             eventTagss.push(eventTags.tag[i].id);
             i = i+1;
@@ -126,6 +108,17 @@ function eventinfos()
         });
     });
 
+//localisation google map
+var myLatLng = {lng: parseFloat(longitude),
+                    lat: parseFloat(latitude)};
+   
+map.setCenter(myLatLng);
+map.setZoom(14);
+ var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+  });
+    
 
     });
 
@@ -133,30 +126,23 @@ function eventinfos()
 
 }
 
-function show_alert2()
 
-{
 
-    var oArgs = {
-
-        app_key: "MBsKVhQWhpZSW9MP",
-
-        q: "music",
-
-        where: "San Diego",
-
-        "date": "2013061000-2015062000",
-
-        page_size: 5,
-
-        sort_order: "popularity",
-
-    };
-
-    EVDB.API.call("/events/search", oArgs, function(oData) {
-
-        // Note: this relies on the custom toString() methods below
-
-    });
-
+function init() {
+  //get parametre l in url
+   
+        map = new google.maps.Map(document.getElementById('map'), {
+        center: 'Lyon, France',
+        zoom: 10
+        });
+ 
 }
+
+
+
+
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+    }

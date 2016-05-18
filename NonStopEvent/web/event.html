@@ -73,9 +73,21 @@
     <div class="col-md-4" id="twt">
         <div class="container">Twitter par ici</div>
     </div>
-    <div class="col-md-8" id="map">
-        <div class="container">Google Maps là</div>
+    <div class="col-md-8" id="googlemap">
+        <div id="map">Google Maps là</div>
     </div>
 </div>
 </body>
 </html>
+   <script type="text/javascript" src="js/carte.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=init"
+        async defer></script>
+
+   <style>
+    #map {
+        height: 100%;
+      }
+      #googlemap{
+          height:300px;
+      }
+     </style>
