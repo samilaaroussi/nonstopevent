@@ -18,6 +18,19 @@
     <script type="text/javascript" src="js/instafeed.min.js"></script>
     <script src="js/eventful.js"></script>
     <script src="js/tags.js"></script>
+    <script type="text/javascript">
+        $.ajax({
+            type: "GET",
+            dataType: "jsonp",
+            cache: false,
+            header: {'Access-Control-Allow-Origin': 'https://api.instagram.com'},
+            url: "https://api.instagram.com/v1/locations/search?lat=\' + lat + \'&lng=\' + long + \'&access_token=523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e",
+            success: function(data)  {
+                var locationid = data;
+                console.log(locationid);
+            }
+        });
+    </script>
 
 </head>
 <body onload="eventinfos();">
