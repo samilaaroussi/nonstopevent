@@ -84,7 +84,43 @@
 </div>
 <div class="row" id="twitterandmap">
     <div class="col-md-4" id="twt">
-        <div class="container">Twitter par ici</div>
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label for="type">I am looking for</label>
+                    <select class="form-control col-md-4" id="type">
+                            <option value="lodging" selected>hotel</option>
+                            <option value="restaurant">restaurant</option>
+                            <option value="restaurant">bar</option>
+                            <option value="train_station">train station</option>
+                            <option value="parking">parking</option>
+                            <option value="airport">airport</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-3">
+                        <label for="type">in a radius of </label>
+                        <select class="form-control col-md-4" id="radius">
+                            <option value="1" >1km</option>
+                            <option value="2" selected>2km</option>
+                            <option value="5" >5km</option>
+                            <option value="10" >10km</option>
+                            <option value="20" >20km</option>
+                        </select>
+                         
+                </div>     
+            </div>
+             <div class="row">
+                 <div class="form-group col-lg-1">
+                    <button type="button" class="btn btn-primary" onclick="onSearchButton();">Search</button>
+                 </div>
+             </div>           
+             
+                
+                
+
+        </div>
     </div>
     <div class="col-md-8" id="googlemap">
         <div id="map">Google Maps là</div>

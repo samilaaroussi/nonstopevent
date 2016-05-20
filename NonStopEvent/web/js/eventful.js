@@ -2,30 +2,8 @@
  * Created by sami on 04/05/16.
  */
 var map;
+var places = [];
 
-function eventpage()
-
-{
-
-    var oArgs = {
-
-        app_key:"MBsKVhQWhpZSW9MP",
-
-        id: "20218701",
-
-        page_size: 25 ,
-
-    };
-
-    EVDB.API.call("/events/get", oArgs, function(oData) {
-
-        // Note: this relies on the custom toString() methods below
-        var id = oData.id;
-        window.location = "event.html?id=" + id;
-
-    });
-
-}
 
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
@@ -111,9 +89,12 @@ function eventinfos()
     });
 
 //localisation google map
-var myLatLng = {lng: parseFloat(longitude),
-                    lat: parseFloat(latitude)};
-   
+var descDiv = document.getElementById('desc');
+descDiv.setAttribute('latitude',latitude);
+descDiv.setAttribute('longitude',longitude);
+
+//console.log(parseFloat(latitude) +' ' + parseFloat(longitude));
+var myLatLng = new google.maps.LatLng(parseFloat(latitude),parseFloat(longitude));
 map.setCenter(myLatLng);
 map.setZoom(14);
  var marker = new google.maps.Marker({
@@ -178,14 +159,49 @@ function init() {
   //get parametre l in url
    
         map = new google.maps.Map(document.getElementById('map'), {
-        center: 'Lyon, France',
-        zoom: 10
         });
  
 }
 
+function onSearchButton()
+{
+    var type = document.getElementById('type').value;
+    var radius = 1000 * parseInt(document.getElementById('radius').value);
+    search(type,radius);
+}
 
-
+function search( type, distance)
+{
+    var descDiv = document.getElementById('desc');
+    parseFloat(descDiv.getAttribute("latitude"));
+    parseFloat(descDiv.getAttribute("longitude"));
+    var filter = {
+        location:{
+            lng:parseFloat(descDiv.getAttribute("longitude")),
+            lat: parseFloat(descDiv.getAttribute("latitude"))
+        },
+        types: [type],
+        radius: distance,
+    };
+    placesService = new google.maps.places.PlacesService(map);
+    
+    placesService.nearbySearch(filter,function(results,status)
+    {
+        if(status === google.maps.places.PlacesServiceStatus.OK)
+        {
+            if(!places.hasOwnProperty(type))
+            {
+                places[type] = [];
+                for (var i = 0; i < results.length; i++) {
+                    places[type].push(results[i]);
+                    console.log(results[i].name);
+                }
+            }
+        }
+    });
+    
+    
+}
 
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
