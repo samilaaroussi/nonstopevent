@@ -15,6 +15,7 @@ function foursquare() {
             {
                 console.log(venues[i].name);
                 console.log(venues[i].id);
+                places[venues[i].id] = venues[i];
             }
             
         });

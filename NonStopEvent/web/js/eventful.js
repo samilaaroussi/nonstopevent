@@ -194,7 +194,7 @@ function search( type, distance)
                 var placeId = results[i].place_id;
                 if(!places.hasOwnProperty(placeId))
                 {
-                    places[placeId] = results[i];
+                    places['g'+placeId] = results[i];
                     console.log(places[placeId].name);
                     console.log(placeId);
                 }
