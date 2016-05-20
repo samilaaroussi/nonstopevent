@@ -5,19 +5,14 @@ var CLIENT_SECRET = 'REEBOMIXJ0RAZO0D4UTBZXLBBSE5FGNHG05MUTF5P4B1MIXE';
 var LATLON = '40.7,-74'; //Position de l'évènement
 var QUERY = 'hotel';
 var i = 0;
+var venues = [];
 
-$.getJSON('https://api.foursquare.com/v2/venues/search?ll=40.7,-74&query=' + QUERY + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
-    function(data) {
-        venues = data.venues;
-    });
-
-console.log(venues);
-
-while(venues[i]) {
-    $.getJSON('https://api.foursquare.com/v2/venues/' + venues[i].id,
-        function(data) {
+function foursquare() {
+    $.getJSON('https://api.foursquare.com/v2/venues/search?ll=40.7,-74&query=' + QUERY + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+        function (data) {
+            venues = data;
             console.log(data);
         });
-    i = i+1;
 }
+
 /***************** Foursquare API *****************/
