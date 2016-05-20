@@ -191,12 +191,12 @@ function search( type, distance)
         {
             for(var i=0; i<results.length;i++)
             {
-                var placeId = results[i].placeId;
+                var placeId = results[i].place_id;
                 if(!places.hasOwnProperty(placeId))
                 {
                     places[placeId] = results[i];
                     console.log(places[placeId].name);
-                    console.log(i);
+                    console.log(placeId);
                 }
             }
 
