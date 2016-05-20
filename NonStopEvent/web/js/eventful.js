@@ -2,8 +2,8 @@
  * Created by sami on 04/05/16.
  */
 var map;
-var places = [];
-
+var places = {};
+var reviews = {};
 
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
@@ -189,14 +189,18 @@ function search( type, distance)
     {
         if(status === google.maps.places.PlacesServiceStatus.OK)
         {
-            if(!places.hasOwnProperty(type))
+            for(var i=0; i<results.length;i++)
             {
-                places[type] = [];
-                for (var i = 0; i < results.length; i++) {
-                    places[type].push(results[i]);
-                    console.log(results[i].name);
+                var placeId = results[i].placeId;
+                if(!places.hasOwnProperty(placeId))
+                {
+                    places[placeId] = results[i];
+                    console.log(places[placeId].name);
+                    console.log(i);
                 }
             }
+
+            
         }
     });
     
