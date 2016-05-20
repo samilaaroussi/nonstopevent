@@ -5,6 +5,31 @@ var map;
 var places = {};
 var reviews = {};
 
+function addPlaces() {
+
+    /***************** Foursquare API *****************/
+
+    var CLIENT_ID = '0JLT1NODQQWLG0C3G5MLPS4GFQKCAK5GBRUI5CQC2W2MX23Q';
+    var CLIENT_SECRET = 'REEBOMIXJ0RAZO0D4UTBZXLBBSE5FGNHG05MUTF5P4B1MIXE';
+    var LATLON = '40.7,-74'; //Position de l'évènement
+    var QUERY = 'hotel';
+    var venues = [];
+
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll=40.7,-74&query=' + QUERY + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+            function (data) {
+                venues = data.response.venues;
+                for(var i=0; i<venues.length; i++)
+                {
+                    console.log(venues[i].name);
+                    console.log(venues[i].id);
+                    places["f" + venues[i].id] = venues[i];
+                }
+
+            });
+
+    console.log(places);
+}
+
 function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
     rawFile.overrideMimeType("application/json");
