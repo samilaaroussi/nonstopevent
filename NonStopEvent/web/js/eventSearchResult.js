@@ -104,8 +104,6 @@ function show_events(page_number)
         body_div.setAttribute("class","panel-body");
         body_div.appendChild(table);
         
-        //heading_div.setAttribute("longitude",events[page_number][i].longitude);
-        //heading_div.setAttribute("latitude",events[page_number][i].latitude);
          var myLatLng = {lng: parseFloat(events[page_number][i].longitude),
                     lat: parseFloat(events[page_number][i].latitude)};
         var marker = new google.maps.Marker({
