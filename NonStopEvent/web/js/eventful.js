@@ -277,7 +277,7 @@ function showPlace(place_id)
         var panel_body_div = document.createElement("div");
         panel_body_div.setAttribute("class","panel-body");
         var reviews_button =  document.createElement("button");
-         reviews_button.setAttribute("onclick","getReviews('"  + place_id + "');");
+         reviews_button.setAttribute("onmouseover","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-info");
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
