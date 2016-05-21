@@ -4,6 +4,7 @@
 var map;
 var places = {};
 var reviews = {};
+var placesService;
 var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735"},
                 restaurant:{google:"restaurant",foursquare:"4d4b7105d754a06374d81259"},
                 bar:{google:"bar",foursquare:"4bf58dd8d48988d116941735"},
@@ -238,7 +239,10 @@ function search( type, distance)
                 if(!places.hasOwnProperty(placeId))
                 {
                     places[placeId] = results[i];
-                     places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});                   
+                    if(results[i].hasOwnProperty("photos"))
+                    {
+                         places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});
+                    }
                     showPlace(placeId);
                 }
             }
@@ -253,7 +257,6 @@ function search( type, distance)
 function showPlace(place_id)
 {
     var results = document.getElementById("results");
-    //pour chaque cle dans places
 
         //variable place
         var place = places[place_id];
@@ -274,6 +277,7 @@ function showPlace(place_id)
         var panel_body_div = document.createElement("div");
         panel_body_div.setAttribute("class","panel-body");
         var reviews_button =  document.createElement("button");
+         reviews_button.setAttribute("onclick","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-info");
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
@@ -281,6 +285,7 @@ function showPlace(place_id)
         //review divs
         var reviews_div =  document.createElement("div");
         reviews_div.setAttribute("class","collapse in");
+        reviews_div.setAttribute("id","div" + place_id);
         //append divs
         placeDiv.appendChild(place_name_div);
         panel_body_div.appendChild(place_photo);
@@ -292,6 +297,45 @@ function showPlace(place_id)
     
 }
 
+function getReviews(place_id)
+{
+    switch(place_id[0])
+    {
+        case 'f':
+                break;
+        case 'g':
+            {
+                getGoogleReviews(place_id.substring(1));
+                break;
+            }
+        case 'h':
+            
+    }
+}
+var loading = false;
+function getGoogleReviews(place_id)
+{
+    var reviews_for_a_place;
+
+    if(!reviews.hasOwnProperty(place_id))
+    {
+        placesService.getDetails({placeId:place_id},function(result, status){
+            if(status === google.maps.places.PlacesServiceStatus.OK)
+            {
+                reviews_for_a_place = result.reviews;
+                var reviews_div = document.getElementById('div'+ 'g' + place_id);
+                reviews_div.innerHTML = "<ul class='list-group'>";
+                for(var i=0; i< reviews_for_a_place.length; i++)
+                {
+
+                    reviews_div.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text ;
+                    reviews_div.innerHTML += '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
+                }
+                reviews_div.innerHTML += "</ul>";
+            }
+        });
+    }
+}
 function cleanPlaces()
 {
     places= {};
