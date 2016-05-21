@@ -4,25 +4,30 @@
 var map;
 var places = {};
 var reviews = {};
+var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735"}} ;
 
-function addPlaces() {
+function addPlaces(type, radius) {
 
     /***************** Foursquare API *****************/
 
     var CLIENT_ID = '0JLT1NODQQWLG0C3G5MLPS4GFQKCAK5GBRUI5CQC2W2MX23Q';
     var CLIENT_SECRET = 'REEBOMIXJ0RAZO0D4UTBZXLBBSE5FGNHG05MUTF5P4B1MIXE';
-    var LATLON = '40.7,-74'; //Position de l'évènement
-    var QUERY = 'hotel';
+    var descDiv = document.getElementById('desc');
+    var LATLON = descDiv.getAttribute("latitude") + ','+descDiv.getAttribute("longitude"); //Position de l'évènement
     var venues = [];
-
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll=40.7,-74&query=' + QUERY + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+    //var intend = 'browse';
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
                 {
-                    console.log(venues[i].name);
-                    console.log(venues[i].id);
-                    places["f" + venues[i].id] = venues[i];
+                    //console.log(venues[i].name);
+                    //console.log(venues[i].id);
+                    if(!places.hasOwnProperty("f" + venues[i].id))
+                    {
+                        places["f" + venues[i].id] = venues[i];
+                        showPlace('f' + venues[i].id);
+                    }
                 }
 
             });
@@ -190,9 +195,16 @@ function init() {
 
 function onSearchButton()
 {
+    //clean last search result
+    cleanPlaces();
+    
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
-    search(type,radius);
+    
+    search(categorie[type].google,radius);
+    //search foursquare
+    addPlaces(categorie[type].foursquare,radius);
+
 }
 
 function search( type, distance)
@@ -220,8 +232,7 @@ function search( type, distance)
                 if(!places.hasOwnProperty(placeId))
                 {
                     places[placeId] = results[i];
-                    console.log(places[placeId].name);
-                    console.log(placeId);
+                    showPlace(placeId);
                 }
             }
 
@@ -230,6 +241,50 @@ function search( type, distance)
     });
     
     
+}
+
+function showPlace(place_id)
+{
+    var results = document.getElementById("results");
+    //pour chaque cle dans places
+
+        //variable place
+        var place = places[place_id];
+        
+        var placeDiv = document.createElement("div");
+        placeDiv.setAttribute("class","panel panel-primary");
+        placeDiv.setAttribute("id", place_id);
+        
+        //place name
+        var place_name_div = document.createElement("div");
+        place_name_div.setAttribute("class","panel-heading");
+        place_name_div.innerHTML = place.name;
+        //show reviews button
+        var panel_body_div = document.createElement("div");
+        panel_body_div.setAttribute("class","panel-body");
+        var reviews_button =  document.createElement("button");
+        reviews_button.setAttribute("class","btn btn-info");
+        reviews_button.setAttribute("data-toggle","collapse");
+        reviews_button.setAttribute("data-target","#div"+place_id);
+        reviews_button.innerHTML = "reviews";
+        //review divs
+        var reviews_div =  document.createElement("div");
+        reviews_div.setAttribute("class","collapse in");
+        //append divs
+        placeDiv.appendChild(place_name_div);
+        panel_body_div.appendChild(reviews_button);
+        panel_body_div.appendChild(reviews_div);
+        placeDiv.appendChild(panel_body_div);
+        
+        results.appendChild(placeDiv);
+    
+}
+
+function cleanPlaces()
+{
+    places= {};
+     var results = document.getElementById("results");
+     results.innerHTML = "";
 }
 
 function getQueryString(name) {
