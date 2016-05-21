@@ -282,6 +282,8 @@ function showPlace(place_id)
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
         reviews_button.innerHTML = "reviews";
+        //staring(rating) div
+        //<div class="rateit" data-rateit-value="2.5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
         //review divs
         var reviews_div =  document.createElement("div");
         reviews_div.setAttribute("class","collapse in");
@@ -312,7 +314,7 @@ function getReviews(place_id)
             
     }
 }
-var loading = false;
+
 function getGoogleReviews(place_id)
 {
     var reviews_for_a_place;
