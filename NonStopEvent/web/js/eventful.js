@@ -4,7 +4,13 @@
 var map;
 var places = {};
 var reviews = {};
-var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735"}} ;
+var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735"},
+                restaurant:{google:"restaurant",foursquare:"4d4b7105d754a06374d81259"},
+                bar:{google:"bar",foursquare:"4bf58dd8d48988d116941735"},
+                train_station:{google:"train_station",foursquare:"4bf58dd8d48988d129951735"},
+                parking:{google:"parking",foursquare:"4c38df4de52ce0d596b336e1"},
+                airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735"},
+            };
 
 function addPlaces(type, radius) {
 
