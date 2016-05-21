@@ -232,6 +232,7 @@ function search( type, distance)
                 if(!places.hasOwnProperty(placeId))
                 {
                     places[placeId] = results[i];
+                     places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});                   
                     showPlace(placeId);
                 }
             }
@@ -259,6 +260,10 @@ function showPlace(place_id)
         var place_name_div = document.createElement("div");
         place_name_div.setAttribute("class","panel-heading");
         place_name_div.innerHTML = place.name;
+        //place photo
+        var place_photo = document.createElement("img");
+        place_photo.setAttribute("src",place.photo);
+        place_photo.setAttribute("class","img-thumbnail");
         //show reviews button
         var panel_body_div = document.createElement("div");
         panel_body_div.setAttribute("class","panel-body");
@@ -272,6 +277,7 @@ function showPlace(place_id)
         reviews_div.setAttribute("class","collapse in");
         //append divs
         placeDiv.appendChild(place_name_div);
+        panel_body_div.appendChild(place_photo);
         panel_body_div.appendChild(reviews_button);
         panel_body_div.appendChild(reviews_div);
         placeDiv.appendChild(panel_body_div);
