@@ -214,7 +214,7 @@ function onSearchButton()
 
 }
 
-function search( type, distance)
+function search(type, distance)
 {
     var descDiv = document.getElementById('desc');
     parseFloat(descDiv.getAttribute("latitude"));
@@ -304,6 +304,7 @@ function getReviews(place_id)
     switch(place_id[0])
     {
         case 'f':
+                getFoursquareReviews(place_id.substring(1));
                 break;
         case 'g':
             {
@@ -314,6 +315,28 @@ function getReviews(place_id)
             
     }
 }
+<<<<<<< HEAD
+=======
+var loading = false;
+
+function getFoursquareReviews(place_id) {
+
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+    var reviews_div = document.getElementById('div'+ 'f' + place_id);
+
+    reviews_div.innerHTML = "<ul class='list-group'>";
+
+    $.getJSON('https://api.foursquare.com/v2/venues/' + place_id,
+        function (data) {
+            place = data.response;
+            console.log("aaaaa:" + place);
+
+        });
+
+    reviews_div.innerHTML += "</ul>";
+}
+>>>>>>> origin/master
 
 function getGoogleReviews(place_id)
 {
