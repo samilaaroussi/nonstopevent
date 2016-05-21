@@ -283,7 +283,12 @@ function showPlace(place_id)
         reviews_button.setAttribute("data-target","#div"+place_id);
         reviews_button.innerHTML = "reviews";
         //staring(rating) div
-        //<div class="rateit" data-rateit-value="2.5" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+        var rating_div = document.createElement('div');
+        rating_div.setAttribute('class',"rateit");
+        rating_div.setAttribute('data-rateit-value',2.5);
+        rating_div.setAttribute('data-rateit-ispreset',"true");
+        rating_div.setAttribute('data-rateit-readonly',"true");
+        
         //review divs
         var reviews_div =  document.createElement("div");
         reviews_div.setAttribute("class","collapse in");
@@ -291,12 +296,14 @@ function showPlace(place_id)
         //append divs
         placeDiv.appendChild(place_name_div);
         panel_body_div.appendChild(place_photo);
+        panel_body_div.appendChild(rating_div);
         panel_body_div.appendChild(reviews_button);
         panel_body_div.appendChild(reviews_div);
         placeDiv.appendChild(panel_body_div);
         
         results.appendChild(placeDiv);
-    
+        
+        $('div.rateit, span.rateit').rateit(); 
 }
 
 function getReviews(place_id)
@@ -315,8 +322,7 @@ function getReviews(place_id)
             
     }
 }
-<<<<<<< HEAD
-=======
+
 var loading = false;
 
 function getFoursquareReviews(place_id) {
@@ -336,7 +342,7 @@ function getFoursquareReviews(place_id) {
 
     reviews_div.innerHTML += "</ul>";
 }
->>>>>>> origin/master
+
 
 function getGoogleReviews(place_id)
 {
