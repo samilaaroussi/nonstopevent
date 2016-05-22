@@ -309,6 +309,7 @@ function showPlace(place_id)
 
 function getReviews(place_id)
 {
+
     switch(place_id[0])
     {
         case 'f':
@@ -362,8 +363,7 @@ function getGoogleReviews(place_id)
                 for(var i=0; i< reviews_for_a_place.length; i++)
                 {
 
-                    reviews_div.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text ;
-                    reviews_div.innerHTML += '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
+                    reviews_div.innerHTML += '<li><blockquote>' + reviews_for_a_place[i].text + '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
                 }
                 reviews_div.innerHTML += "</ul>";
             }
