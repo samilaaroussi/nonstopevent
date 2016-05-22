@@ -1,14 +1,14 @@
 .navbar {
     margin-bottom: 0 !important;
-    border-bottom: 4px solid #554FAF;
+    background: #545FAF;
 }
 
 .navbar a {
-    color: #666;
+    color: #fff;
 }
 
 .navbar a:hover {
-    color: #333;
+    color: #eee;
     background: transparent !important;
 }
 
@@ -17,6 +17,11 @@
 }
 .panel-height {
     height: 2%; / change according to your requirement/
+}
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
 }
 
 li {
@@ -31,6 +36,7 @@ li {
 #insta {
     background: orangered;
 }
+
 #desc {
 
     background: #fff;
@@ -38,20 +44,34 @@ li {
 }
 
 #desc img{
-
+    border-radius: 6px;
 }
 
 #desc small{
     color: #eee;
 }
+
 #twt{
     background: #4099FF;
+    color: #fff;
+}
+
+#twitterandmap {
+    background: #545FAF;
+}
+
+#mapdesc {
     color: #fff;
 }
 
 #map{
     background: #1BA261;
     color: #fff;
+    height: 100%;
+}
+
+#googlemap{
+    height:300px;
 }
 
 .deg {

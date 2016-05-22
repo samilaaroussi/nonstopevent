@@ -134,6 +134,7 @@ descDiv.setAttribute('longitude',longitude);
 var myLatLng = new google.maps.LatLng(parseFloat(latitude),parseFloat(longitude));
 map.setCenter(myLatLng);
 map.setZoom(14);
+        map.setOptions({ scrollwheel: false });
  var marker = new google.maps.Marker({
     position: myLatLng,
     map: map,
@@ -327,16 +328,18 @@ var loading = false;
 
 function getFoursquareReviews(place_id) {
 
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
+    var CLIENT_ID = '0JLT1NODQQWLG0C3G5MLPS4GFQKCAK5GBRUI5CQC2W2MX23Q';
+    var CLIENT_SECRET = 'REEBOMIXJ0RAZO0D4UTBZXLBBSE5FGNHG05MUTF5P4B1MIXE';
     var reviews_div = document.getElementById('div'+ 'f' + place_id);
 
     reviews_div.innerHTML = "<ul class='list-group'>";
 
-    $.getJSON('https://api.foursquare.com/v2/venues/' + place_id,
+    var token = '';
+
+    $.getJSON('https://api.foursquare.com/v2/venues/' + place_id + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET,
         function (data) {
             place = data.response;
-            console.log("aaaaa:" + place);
+            console.log("foursquare:" + place);
 
         });
 

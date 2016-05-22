@@ -84,23 +84,23 @@
     </div>
 </div>
 <div class="row" id="twitterandmap">
-    <div class="col-md-4" id="twt">
+    <div class="col-md-4" id="mapdesc">
         <div class="container">
             <div class="row">
-                <div class="form-group col-lg-3">
+                <div class="form-group col-md-3">
                     <label for="type">I am looking for</label>
-                    <select class="form-control col-md-4" id="type">
-                            <option value="hotel" selected>hotel</option>
-                            <option value="restaurant">restaurant</option>
-                            <option value="bar">bar</option>
-                            <option value="train_station">train station</option>
-                            <option value="parking">parking</option>
-                            <option value="airport">airport</option>
+                    <select class="form-control col-md-4" id="type" style="font-family: FontAwesome, sans-serif;">
+                            <option value="hotel" selected>&#xf236 hotel</option>
+                            <option value="restaurant">&#xf0f5 restaurant</option>
+                            <option value="bar">&#xf000 bar</option>
+                            <option value="train_station">&#xf238 train station</option>
+                            <option value="parking">&#xf1b9 parking</option>
+                            <option value="airport">&#xf072 airport</option>
                     </select>
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-lg-3">
+                <div class="form-group col-md-3">
                         <label for="type">in a radius of </label>
                         <select class="form-control col-md-4" id="radius">
                             <option value="1" >1km</option>
@@ -113,7 +113,7 @@
                 </div>     
             </div>
              <div class="row">
-                 <div class="form-group col-lg-1">
+                 <div class="form-group col-md-3">
                     <button type="button" class="btn btn-primary" onclick="onSearchButton();">Search</button>
                  </div>
              </div>           
@@ -134,12 +134,3 @@
    <script type="text/javascript" src="js/carte.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCViDPJqJZk_ZRa2novwvPkSsBzHvbEbDI&signed_in=true&libraries=places&callback=init"
         async defer></script>
-
-   <style>
-    #map {
-        height: 100%;
-      }
-      #googlemap{
-          height:300px;
-      }
-     </style>
