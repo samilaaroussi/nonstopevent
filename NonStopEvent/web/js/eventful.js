@@ -5,14 +5,14 @@ var map;
 var places = {};
 var reviews = {};
 var placesService;
-var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735"},
-                restaurant:{google:"restaurant",foursquare:"4d4b7105d754a06374d81259"},
-                bar:{google:"bar",foursquare:"4bf58dd8d48988d116941735"},
+var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",here:"hotel"},
+                restaurant:{google:"restaurant",foursquare:"4d4b7105d754a06374d81259",here:"restaurant"},
+                bar:{google:"bar",foursquare:"4bf58dd8d48988d116941735",here:"coffee-tea"},
                 train_station:{google:"train_station",foursquare:"4bf58dd8d48988d129951735"},
                 parking:{google:"parking",foursquare:"4c38df4de52ce0d596b336e1"},
-                airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735"},
+                airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"},
             };
-
+var here;
 function addPlaces(type, radius) {
 
     /***************** Foursquare API *****************/
@@ -198,6 +198,7 @@ function init() {
    
         map = new google.maps.Map(document.getElementById('map'), {
         });
+        initHere();
  
 }
 
@@ -212,6 +213,7 @@ function onSearchButton()
     search(categorie[type].google,radius);
     //search foursquare
     addPlaces(categorie[type].foursquare,radius);
+    searchHerePlaces(categorie[type].here,radius);
 
 }
 
@@ -255,6 +257,38 @@ function search(type, distance)
     
 }
 
+function searchHerePlaces(type, distance)
+{
+    var descDiv = document.getElementById('desc');
+    
+    var explore = new H.places.Explore(here.getPlacesService()), exploreResult;
+
+    // Define search parameters:
+    var params = {
+    // Plain text search for places with the word "hotel"
+    // associated with them:
+      cat: type,
+    //  Search in the Chinatown district in San Francisco:
+      'at': descDiv.getAttribute("latitude") + ',' + descDiv.getAttribute("longitude")
+    };
+    
+    explore.request(params, {},
+    function(data) {
+ 
+        for(var i =0; i<data.results.items.length;i++)
+        {
+            var place = {};
+            place.name = data.results.items[i].title;
+            place.rating = data.results.items[i].averageRating;
+            place.id = 'h' + data.results.items[i].id;
+            place.distance = data.results.items[i].distance;
+            places[place.id] = place;
+            showPlace(place.id);
+        }
+    }, 
+    function(data) {console.log(data);});
+
+}
 function showPlace(place_id)
 {
     var results = document.getElementById("results");
@@ -411,6 +445,17 @@ function getGoogleReviews(place_id)
                 }
                 reviews_div.innerHTML += "</ul>";
     }
+}
+
+function initHere()
+{
+      here = new H.service.Platform({
+      useCIT: true,
+      app_id: 'ZUuaVFXcYwWuvaBezozg',
+      app_code: 'nn0mL7QtqnXQ6T3Swyh84Q'
+    });
+    
+    
 }
 function cleanPlaces()
 {
