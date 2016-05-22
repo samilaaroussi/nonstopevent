@@ -272,8 +272,14 @@ function showPlace(place_id)
         place_name_div.innerHTML = place.name;
         //place photo
         var place_photo = document.createElement("img");
+        if(!place.hasOwnProperty('photo'))
+        {
+            place.photo = 'images/imageNotFound.jpg';
+        }
         place_photo.setAttribute("src",place.photo);
         place_photo.setAttribute("class","img-thumbnail");
+        place_photo.setAttribute("height",256);
+        place_photo.setAttribute("width",256);
         //show reviews button
         var panel_body_div = document.createElement("div");
         panel_body_div.setAttribute("class","panel-body");
@@ -285,11 +291,34 @@ function showPlace(place_id)
         reviews_button.innerHTML = "reviews";
         //staring(rating) div
         var rating_div = document.createElement('div');
-        rating_div.setAttribute('class',"rateit");
-        rating_div.setAttribute('data-rateit-value',2.5);
-        rating_div.setAttribute('data-rateit-ispreset',"true");
-        rating_div.setAttribute('data-rateit-readonly',"true");
+        var rating_star_div = document.createElement('div');
+        rating_star_div.setAttribute('class',"rateit");
+        rating_star_div.setAttribute('data-rateit-value',places[place_id].rating);
+        rating_star_div.setAttribute('data-rateit-ispreset',"true");
+        rating_star_div.setAttribute('data-rateit-readonly',"true");
+        rating_div.appendChild(rating_star_div);
+        //rating by aspect div
+        if(places[place_id].hasOwnProperty('aspects'))
+        {
+            for(var i=0;i<places[place_id].aspects.length;i++)
+            {
+                var aspect = places[place_id].aspects[i].type;
+                var rating = places[place_id].aspects[i].rating;
+                
+                var rating_aspect_div = document.createElement("div");
+                rating_aspect_div.setAttribute("class","progress");
+                var rating_pourcentage = rating / 30 * 100;
+                rating_aspect_div.innerHTML = "<div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width:"+ rating_pourcentage+ "%\">" 
+                        + aspect + ": " + rating/30 *5 + "/5</div>"
+                
+                rating_div.appendChild(rating_aspect_div);
+            }
+        }
         
+
+            
+ 
+
         //review divs
         var reviews_div =  document.createElement("div");
         reviews_div.setAttribute("class","collapse in");
@@ -367,7 +396,20 @@ function getGoogleReviews(place_id)
                 }
                 reviews_div.innerHTML += "</ul>";
             }
+            reviews[place_id] = result.reviews;
         });
+    }else
+    {
+                reviews_for_a_place = reviews[place_id];
+                var reviews_div = document.getElementById('div'+ 'g' + place_id);
+                reviews_div.innerHTML = "<ul class='list-group'>";
+                for(var i=0; i< reviews_for_a_place.length; i++)
+                {
+
+                    reviews_div.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text ;
+                    reviews_div.innerHTML += '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
+                }
+                reviews_div.innerHTML += "</ul>";
     }
 }
 function cleanPlaces()
