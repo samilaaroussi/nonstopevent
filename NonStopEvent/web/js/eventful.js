@@ -28,8 +28,8 @@ function addPlaces(type, radius) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
                 {
-                    //console.log(venues[i].name);
-                    //console.log(venues[i].id);
+                    console.log(venues[i].name);
+                    console.log(venues[i].id);
                     if(!places.hasOwnProperty("f" + venues[i].id))
                     {
                         places["f" + venues[i].id] = venues[i];
@@ -139,7 +139,7 @@ map.setZoom(14);
     position: myLatLng,
     map: map,
   });
-    
+
 
 
         var reqfb = $.getJSON('https://api.instagram.com/v1/locations/search?lat=' + lat + '&lng=' + long + '&access_token=523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e');
@@ -195,21 +195,21 @@ map.setZoom(14);
 
 function init() {
   //get parametre l in url
-   
+
         map = new google.maps.Map(document.getElementById('map'), {
         });
         initHere();
- 
+
 }
 
 function onSearchButton()
 {
     //clean last search result
     cleanPlaces();
-    
+
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
-    
+
     search(categorie[type].google,radius);
     //search foursquare
     addPlaces(categorie[type].foursquare,radius);
@@ -231,7 +231,7 @@ function search(type, distance)
         radius: distance,
     };
     placesService = new google.maps.places.PlacesService(map);
-    
+
     placesService.nearbySearch(filter,function(results,status)
     {
         if(status === google.maps.places.PlacesServiceStatus.OK)
@@ -250,17 +250,17 @@ function search(type, distance)
                 }
             }
 
-            
+
         }
     });
-    
-    
+
+
 }
 
 function searchHerePlaces(type, distance)
 {
     var descDiv = document.getElementById('desc');
-    
+
     var explore = new H.places.Explore(here.getPlacesService()), exploreResult;
 
     // Define search parameters:
@@ -271,10 +271,10 @@ function searchHerePlaces(type, distance)
     //  Search in the Chinatown district in San Francisco:
       'at': descDiv.getAttribute("latitude") + ',' + descDiv.getAttribute("longitude")
     };
-    
+
     explore.request(params, {},
     function(data) {
- 
+
         for(var i =0; i<data.results.items.length;i++)
         {
             var place = {};
@@ -285,7 +285,7 @@ function searchHerePlaces(type, distance)
             places[place.id] = place;
             showPlace(place.id);
         }
-    }, 
+    },
     function(data) {console.log(data);});
 
 }
@@ -295,11 +295,11 @@ function showPlace(place_id)
 
         //variable place
         var place = places[place_id];
-        
+
         var placeDiv = document.createElement("div");
         placeDiv.setAttribute("class","panel panel-primary");
         placeDiv.setAttribute("id", place_id);
-        
+
         //place name
         var place_name_div = document.createElement("div");
         place_name_div.setAttribute("class","panel-heading");
@@ -338,20 +338,20 @@ function showPlace(place_id)
             {
                 var aspect = places[place_id].aspects[i].type;
                 var rating = places[place_id].aspects[i].rating;
-                
+
                 var rating_aspect_div = document.createElement("div");
                 rating_aspect_div.setAttribute("class","progress");
                 var rating_pourcentage = rating / 30 * 100;
-                rating_aspect_div.innerHTML = "<div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width:"+ rating_pourcentage+ "%\">" 
+                rating_aspect_div.innerHTML = "<div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width:"+ rating_pourcentage+ "%\">"
                         + aspect + ": " + rating/30 *5 + "/5</div>"
-                
+
                 rating_div.appendChild(rating_aspect_div);
             }
         }
-        
 
-            
- 
+
+
+
 
         //review divs
         var reviews_div =  document.createElement("div");
@@ -364,10 +364,10 @@ function showPlace(place_id)
         panel_body_div.appendChild(reviews_button);
         panel_body_div.appendChild(reviews_div);
         placeDiv.appendChild(panel_body_div);
-        
+
         results.appendChild(placeDiv);
-        
-        $('div.rateit, span.rateit').rateit(); 
+
+        $('div.rateit, span.rateit').rateit();
 }
 
 function getReviews(place_id)
@@ -384,7 +384,7 @@ function getReviews(place_id)
                 break;
             }
         case 'h':
-            
+
     }
 }
 
@@ -395,16 +395,23 @@ function getFoursquareReviews(place_id) {
     var CLIENT_ID = '0JLT1NODQQWLG0C3G5MLPS4GFQKCAK5GBRUI5CQC2W2MX23Q';
     var CLIENT_SECRET = 'REEBOMIXJ0RAZO0D4UTBZXLBBSE5FGNHG05MUTF5P4B1MIXE';
     var reviews_div = document.getElementById('div'+ 'f' + place_id);
+    var tips;
+    var count = 10;
 
     reviews_div.innerHTML = "<ul class='list-group'>";
 
-    var token = '';
-
-    $.getJSON('https://api.foursquare.com/v2/venues/' + place_id + '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET,
+    $.getJSON('https://api.foursquare.com/v2/venues/' + place_id + '/tips/?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160524',
         function (data) {
-            place = data.response;
-            console.log("foursquare:" + place);
+            tips = data.response.tips.items;
+            count = data.response.tips.count;
 
+            for(var i=0; i<count; i++)
+            {
+                reviews_div.innerHTML += '<li><blockquote>' + tips[i].text + '<footer>' + tips[i].user.firstName + ' ' + tips[i].user.lastName + '</footer>'+ '</blockquote></li>';
+            }
+
+            console.log('tips:' + count);
+            console.log(tips);
         });
 
     reviews_div.innerHTML += "</ul>";
@@ -453,8 +460,8 @@ function initHere()
       app_id: 'ZUuaVFXcYwWuvaBezozg',
       app_code: 'nn0mL7QtqnXQ6T3Swyh84Q'
     });
-    
-    
+
+
 }
 function cleanPlaces()
 {
