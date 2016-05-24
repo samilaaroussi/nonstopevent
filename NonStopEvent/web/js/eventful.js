@@ -317,7 +317,7 @@ function showPlace(place_id)
         placeDivCol12.setAttribute("class","col-md-12");
 
         //place name
-        var place_name_div = document.createElement("h2");
+        var place_name_div = document.createElement("h3");
         place_name_div.innerHTML = place.name;
 
         var place_desc = document.createElement("p");
@@ -343,11 +343,11 @@ function showPlace(place_id)
         //show reviews button
 
         var reviews_button =  document.createElement("button");
-         reviews_button.setAttribute("onmouseover","getReviews('"  + place_id + "');");
-        reviews_button.setAttribute("class","btn btn-info");
+        reviews_button.setAttribute("onmouseover","getReviews('"  + place_id + "');");
+        reviews_button.setAttribute("class","btn btn-default dropdown-toggle");
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
-        reviews_button.innerHTML = "reviews";
+        reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews";
         //staring(rating) div
         var rating_div = document.createElement('span');
         var rating_star_div = document.createElement('span');
@@ -396,6 +396,7 @@ function showPlace(place_id)
         placeDivCol12.appendChild(reviews_button);
         placeDivCol12.appendChild(span_separator);
         placeDivCol12.appendChild(rating_div);
+        placeDivCol12.appendChild(reviews_div);
         results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
