@@ -297,13 +297,39 @@ function showPlace(place_id)
         var place = places[place_id];
 
         var placeDiv = document.createElement("div");
-        placeDiv.setAttribute("class","panel panel-primary");
+        placeDiv.setAttribute("class","col-md-6");
         placeDiv.setAttribute("id", place_id);
 
+        //place div well
+        var placeDivWell = document.createElement("div");
+        placeDivWell.setAttribute("class","well well-sm");
+
+        var placeDivRow = document.createElement("div");
+        placeDivRow.setAttribute("class","row");
+
+        var placeDivCol3 = document.createElement("div");
+        placeDivCol3.setAttribute("class","col-xs-3 col-md-3 text-center");
+
+        var placeDivCol9 = document.createElement("div");
+        placeDivCol9.setAttribute("class","col-xs-9 col-md-9 section-box");
+
+        var placeDivCol12 = document.createElement("div");
+        placeDivCol12.setAttribute("class","col-md-12");
+
         //place name
-        var place_name_div = document.createElement("div");
-        place_name_div.setAttribute("class","panel-heading");
+        var place_name_div = document.createElement("h2");
         place_name_div.innerHTML = place.name;
+
+        var place_desc = document.createElement("p");
+        place_desc.innerHTML = '<hr>';
+
+        var place_rating = document.createElement("div");
+        place_rating.setAttribute("class","row rating-desc");
+
+        var span_separator = document.createElement("span");
+        span_separator.setAttribute("class","separator");
+
+
         //place photo
         var place_photo = document.createElement("img");
         if(!place.hasOwnProperty('photo'))
@@ -311,12 +337,11 @@ function showPlace(place_id)
             place.photo = 'images/imageNotFound.jpg';
         }
         place_photo.setAttribute("src",place.photo);
-        place_photo.setAttribute("class","img-thumbnail");
-        place_photo.setAttribute("height",256);
-        place_photo.setAttribute("width",256);
+        place_photo.setAttribute("height",128);
+        place_photo.setAttribute("width",128);
+
         //show reviews button
-        var panel_body_div = document.createElement("div");
-        panel_body_div.setAttribute("class","panel-body");
+
         var reviews_button =  document.createElement("button");
          reviews_button.setAttribute("onmouseover","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-info");
@@ -324,8 +349,8 @@ function showPlace(place_id)
         reviews_button.setAttribute("data-target","#div"+place_id);
         reviews_button.innerHTML = "reviews";
         //staring(rating) div
-        var rating_div = document.createElement('div');
-        var rating_star_div = document.createElement('div');
+        var rating_div = document.createElement('span');
+        var rating_star_div = document.createElement('span');
         rating_star_div.setAttribute('class',"rateit");
         rating_star_div.setAttribute('data-rateit-value',places[place_id].rating);
         rating_star_div.setAttribute('data-rateit-ispreset',"true");
@@ -358,13 +383,19 @@ function showPlace(place_id)
         reviews_div.setAttribute("class","collapse in");
         reviews_div.setAttribute("id","div" + place_id);
         //append divs
-        placeDiv.appendChild(place_name_div);
-        panel_body_div.appendChild(place_photo);
-        panel_body_div.appendChild(rating_div);
-        panel_body_div.appendChild(reviews_button);
-        panel_body_div.appendChild(reviews_div);
-        placeDiv.appendChild(panel_body_div);
 
+        placeDiv.appendChild(placeDivWell);
+        placeDivWell.appendChild(placeDivRow);
+        placeDivRow.appendChild(placeDivCol3);
+        placeDivCol3.appendChild(place_photo);
+        placeDivRow.appendChild(placeDivCol9);
+        placeDivCol9.appendChild(place_name_div);
+        placeDivCol9.appendChild(place_desc);
+        placeDivCol9.appendChild(place_rating);
+        place_rating.appendChild(placeDivCol12);
+        placeDivCol12.appendChild(reviews_button);
+        placeDivCol12.appendChild(span_separator);
+        placeDivCol12.appendChild(rating_div);
         results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
