@@ -45,16 +45,16 @@ function addPlaces(type, radius) {
                         function (data) {
                             if(data.response.venue.hasOwnProperty('rating')) {
                                 rating = data.response.venue.rating;
-                                places["f" + venue.id].rating = rating/2;
+                                places["f" + data.response.venue.id].rating = rating/2;
                                 console.log(rating/2);
                             }
 
                             if(data.response.venue.hasOwnProperty('bestPhoto')) {
                                 photo = data.response.venue.bestPhoto.prefix + "256x256" + data.response.venue.bestPhoto.suffix;
-                                places["f" + venue.id].photo = photo;
+                                places["f" + data.response.venue.id].photo = photo;
                                 console.log(photo);
                             }
-                            showPlace("f" + venue.id);
+                            showPlace("f" + data.response.venue.id);
                         }
                     );
                 }
