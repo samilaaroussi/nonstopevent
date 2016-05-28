@@ -50,7 +50,7 @@ function addPlaces(type, radius) {
                             }
 
                             if(data.response.venue.hasOwnProperty('bestPhoto')) {
-                                photo = data.response.venue.bestPhoto.prefix + data.response.venue.bestPhoto.suffix.substr(1);
+                                photo = data.response.venue.bestPhoto.prefix + "256x256" + data.response.venue.bestPhoto.suffix;
                                 places["f" + venue.id].photo = photo;
                                 console.log(photo);
                             }
