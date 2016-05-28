@@ -54,6 +54,7 @@ function addPlaces(type, radius) {
                                 places["f" + venue.id].photo = photo;
                                 console.log(photo);
                             }
+                            showPlace(venue.id);
                         }
                     );
                 }
