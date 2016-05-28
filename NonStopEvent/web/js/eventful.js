@@ -13,6 +13,7 @@ var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",h
                 airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"},
             };
 var here;
+var venue;
 function addPlaces(type, radius) {
 
     /***************** Foursquare API *****************/
@@ -22,8 +23,11 @@ function addPlaces(type, radius) {
     var descDiv = document.getElementById('desc');
     var LATLON = descDiv.getAttribute("latitude") + ','+descDiv.getAttribute("longitude"); //Position de l'évènement
     var venues = [];
+    var details = [];
+    var rating = 0;
+    var photo = [];
     //var intend = 'browse';
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
@@ -35,6 +39,23 @@ function addPlaces(type, radius) {
                         places["f" + venues[i].id] = venues[i];
                         showPlace('f' + venues[i].id);
                     }
+                    venue = venues[i];
+
+                    $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20160528',
+                        function (data) {
+                            if(data.response.venue.hasOwnProperty('rating')) {
+                                rating = data.response.venue.rating;
+                                places["f" + venue.id].rating = rating/2;
+                                console.log(rating/2);
+                            }
+
+                            if(data.response.venue.hasOwnProperty('bestPhoto')) {
+                                photo = data.response.venue.bestPhoto.prefix + data.response.venue.bestPhoto.suffix.substr(1);
+                                places["f" + venue.id].photo = photo;
+                                console.log(photo);
+                            }
+                        }
+                    );
                 }
 
             });
@@ -69,7 +90,7 @@ function eventinfos()
 
         page_size: 25,
 
-        image_sizes: "block100,block178,large,block250",
+        image_sizes: "block,block100,block178,large,block250",
 
     };
 
@@ -95,7 +116,7 @@ function eventinfos()
         console.log(eventTagss);
 
         $('#title').html("<h2>" + eventTitle + "</h2>" );
-        $('.photos').html("<img src=" + oData.images.image[0].block178.url + "\/>");
+        $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block178.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
 
@@ -145,7 +166,6 @@ map.setZoom(14);
         var reqfb = $.getJSON('https://api.instagram.com/v1/locations/search?lat=' + lat + '&lng=' + long + '&access_token=523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e');
 
         /*console.log(reqfb);
-
         var res = reqfb.id[0];
         console.log(reqfb);*/
 
@@ -339,6 +359,7 @@ function showPlace(place_id)
         place_photo.setAttribute("src",place.photo);
         place_photo.setAttribute("height",128);
         place_photo.setAttribute("width",128);
+        place_photo.setAttribute("class", "img-rounded");
 
         //show reviews button
 

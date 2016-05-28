@@ -108,7 +108,7 @@ function show_more_events(debut, fin)
     var div = document.createElement("div");
     div.id = events[i].id;
     div.city = events[i].city;
-    div.className = "thumbnail";
+    div.className = "well well-sm";
     div.style.cursor = 'pointer';
     div.onclick = function(){ window.location.href = "event.html?id="+ this.id;};
     div.onmouseover = function() { this.style.backgroundColor = '#c2c2d6';};

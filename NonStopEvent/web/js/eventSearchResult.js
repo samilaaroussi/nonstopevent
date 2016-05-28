@@ -17,7 +17,8 @@ function getAllEvents()
             page_size: 20 ,
             sort_order: 'popularity',
             sort_direction: 'descending',
-            page_number:page_num  
+            page_number:page_num,
+            image_sizes: "block,block100,block178,large,block250",
   };
 
   EVDB.API.call("/events/search", oArgs, function(oData) {
@@ -44,9 +45,9 @@ function getAllEvents()
           {
               events[current_page][i].image.url = null;
           }else{
-                    if(event.image.medium!=='null' && event.image.medium!==null)
+                    if(event.image.block!=='null' && event.image.block!==null)
                    {
-                     events[current_page][i].image.url = event.image.medium.url;
+                     events[current_page][i].image.url = event.image.block.url;
                    }else
                    {
                        events[current_page][i].image.url = event.image.url;
