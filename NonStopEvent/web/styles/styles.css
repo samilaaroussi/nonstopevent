@@ -87,6 +87,13 @@ li {
     font-size: 2em;
 }
 
+#results {
+    margin-top: 20px;
+}
+
+blockquote {
+    font-size: 16px;
+}
 blockquote footer {
     text-transform: capitalize;
 }

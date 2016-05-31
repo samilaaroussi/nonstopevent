@@ -27,7 +27,7 @@ function addPlaces(type, radius) {
     var rating = 0;
     var photo = [];
     //var intend = 'browse';
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
