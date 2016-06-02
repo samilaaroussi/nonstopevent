@@ -48,7 +48,7 @@ function addPlaces(type, radius) {
                                 rating = data.response.venue.rating;
                                 places["f" + data.response.venue.id].rating = rating/2;
 
-                                ratingColor = data.response.venue.ratingColor;
+                                ratingColor = ratingBg(rating);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
 
                                 console.log(rating/2);
@@ -534,6 +534,29 @@ function cleanPlaces()
     places= {};
     var results = document.getElementById("results");
     results.innerHTML = "";
+}
+
+function ratingBg(rating)
+{
+    if(rating < 1) {
+        return "red";
+    }
+
+    else if (rating >= 1 && rating < 2){
+        return "FF9600";
+    }
+
+    else if (rating >= 2 && rating<3) {
+        return "FFC800";
+    }
+
+    else if (rating >= 3 && rating<4) {
+        return "C5DE35";
+    }
+
+    else {
+        return "73CF42";
+    }
 }
 
 function getQueryString(name) {
