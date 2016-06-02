@@ -25,6 +25,7 @@ function addPlaces(type, radius) {
     var venues = [];
     var details = [];
     var rating = 0;
+    var ratingColor = '';
     var photo = [];
     //var intend = 'browse';
         $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
@@ -46,6 +47,10 @@ function addPlaces(type, radius) {
                             if(data.response.venue.hasOwnProperty('rating')) {
                                 rating = data.response.venue.rating;
                                 places["f" + data.response.venue.id].rating = rating/2;
+
+                                ratingColor = data.response.venue.ratingColor;
+                                places["f" + data.response.venue.id].ratingColor = ratingColor;
+
                                 console.log(rating/2);
                             }
 
@@ -350,6 +355,9 @@ function showPlace(place_id)
         var span_separator = document.createElement("span");
         span_separator.setAttribute("class","separator");
 
+        var span_separator2 = document.createElement("span");
+        span_separator2.setAttribute("class","separator");
+
 
         //place photo
         var place_photo = document.createElement("img");
@@ -372,12 +380,15 @@ function showPlace(place_id)
         reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews";
         //staring(rating) div
         var rating_div = document.createElement('span');
+        rating_div.setAttribute('class', 'ratingText')
+        rating_div.setAttribute('style',"background: #" + places[place_id].ratingColor);
         var rating_star_div = document.createElement('span');
         rating_star_div.setAttribute('class',"rateit");
+        rating_star_div.setAttribute('style',"vertical-align: middle");
         rating_star_div.setAttribute('data-rateit-value',places[place_id].rating);
         rating_star_div.setAttribute('data-rateit-ispreset',"true");
         rating_star_div.setAttribute('data-rateit-readonly',"true");
-        rating_div.appendChild(rating_star_div);
+        rating_div.innerHTML = places[place_id].rating;
         //rating by aspect div
         if(places[place_id].hasOwnProperty('aspects'))
         {
@@ -417,6 +428,8 @@ function showPlace(place_id)
         place_rating.appendChild(placeDivCol12);
         placeDivCol12.appendChild(reviews_button);
         placeDivCol12.appendChild(span_separator);
+        placeDivCol12.appendChild(rating_star_div);
+        placeDivCol12.appendChild(span_separator2);
         placeDivCol12.appendChild(rating_div);
         placeDivCol12.appendChild(reviews_div);
         results.appendChild(placeDiv);
@@ -514,18 +527,17 @@ function initHere()
       app_id: 'ZUuaVFXcYwWuvaBezozg',
       app_code: 'nn0mL7QtqnXQ6T3Swyh84Q'
     });
-
-
 }
+
 function cleanPlaces()
 {
     places= {};
-     var results = document.getElementById("results");
-     results.innerHTML = "";
+    var results = document.getElementById("results");
+    results.innerHTML = "";
 }
 
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
-    }
+}

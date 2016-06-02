@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/weatherIcons/css/weather-icons.min.css">
     <link rel="stylesheet" href="js/rateit/rateit.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
@@ -24,24 +30,11 @@
       src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
     <script src="js/lieux.js"></script>
     <script src="js/eventful.js"></script>
-    <script type="text/javascript">
-/*        $.ajax({
-            type: "GET",
-            dataType: "jsonp",
-            cache: false,
-            header: {'Access-Control-Allow-Origin': 'https://api.instagram.com'},
-            url: "https://api.instagram.com/v1/locations/search?lat=\' + lat + \'&lng=\' + long + \'&access_token=523407829.1677ed0.e4b8167878444ab79936d95eb6112d3e",
-            success: function(data)  {
-                var locationid = data;
-                console.log(locationid);
-            }
-        });*/
-    </script>
     <script src="js/rateit/jquery.rateit.min.js" type="text/javascript"></script>
 
 </head>
 <body onload="eventinfos();initHere();">
-<nav class="navbar navbar-static-top">
+<div class="navbar navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -60,7 +53,33 @@
             </ul>
         </div>
     </div>
-</nav>
+</div>
+<div class="navbar navbar static-top sub-navbar">
+    <div class="container">
+        <div class="navbar-header">
+                <select class="bootstrap-select" id="type">
+                    <option value="hotel">hotel</option>
+                    <option value="restaurant">restaurant</option>
+                    <option value="bar">bar</option>
+                    <option value="train_station">train station</option>
+                    <option value="parking">parking</option>
+                    <option value="airport">airport</option>
+                </select>
+
+
+                <select id="radius">
+                    <option value="1" >1km</option>
+                    <option value="2" selected>2km</option>
+                    <option value="5" >5km</option>
+                    <option value="10" >10km</option>
+                    <option value="20" >20km</option>
+                </select>
+
+            <a href="#results" onclick="onSearchButton();" class="btn btn-primary" role="button">Search</a>
+
+        </div>
+    </div>
+</div>
 
 <!--<div class="panel-height">
     <div class="row" id="insta"></div>
@@ -89,47 +108,7 @@
         </div>
     </div>
 </div>
-<div class="row" id="twitterandmap">
-    <div class="col-md-4" id="mapdesc">
-        <div class="container">
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="type">I am looking for</label>
-                    <select class="form-control col-md-4" id="type" style="font-family: FontAwesome, sans-serif;">
-                            <option value="hotel" selected>&#xf236 hotel</option>
-                            <option value="restaurant">&#xf0f5 restaurant</option>
-                            <option value="bar">&#xf000 bar</option>
-                            <option value="train_station">&#xf238 train station</option>
-                            <option value="parking">&#xf1b9 parking</option>
-                            <option value="airport">&#xf072 airport</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-3">
-                        <label for="type">in a radius of </label>
-                        <select class="form-control col-md-4" id="radius">
-                            <option value="1" >1km</option>
-                            <option value="2" selected>2km</option>
-                            <option value="5" >5km</option>
-                            <option value="10" >10km</option>
-                            <option value="20" >20km</option>
-                        </select>
-                         
-                </div>     
-            </div>
-             <div class="row">
-                 <div class="form-group col-md-3 col-xs-12">
-                     <a href="#results" onclick="onSearchButton();" class="btn btn-primary" role="button">Search</a>
-                 </div>
-             </div>           
-             
-                
-                
-
-        </div>
-    </div>
-    <div class="col-md-8" id="googlemap">
+    <div class="col-md-12" id="googlemap">
         <div id="map">Google Maps là</div>
     </div>
 </div>

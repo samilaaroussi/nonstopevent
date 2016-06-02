@@ -91,6 +91,10 @@ li {
     margin-top: 20px;
 }
 
+.sub-navbar {
+    background: #7F9ED3;
+}
+
 blockquote {
     font-size: 16px;
 }
@@ -112,6 +116,18 @@ blockquote footer {
     .row.row-grid [class*="col-sm-"] + [class*="col-sm-"] {
         margin-top: 0;
     }
+}
+
+.ratingText {
+    padding: 2px;
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.ratit {
+    vertical-align: middle;
 }
 
 .glyphicon { margin-right:5px;}
