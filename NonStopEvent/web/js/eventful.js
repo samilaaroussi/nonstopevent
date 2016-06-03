@@ -33,8 +33,8 @@ function addPlaces(type, radius) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
                 {
-                    console.log(venues[i].name);
-                    console.log(venues[i].id);
+                    //console.log(venues[i].name);
+                    //console.log(venues[i].id);
                     if(!places.hasOwnProperty("f" + venues[i].id))
                     {
                         places["f" + venues[i].id] = venues[i];
@@ -51,13 +51,21 @@ function addPlaces(type, radius) {
                                 ratingColor = ratingBg(rating);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
 
-                                console.log(rating/2);
+                                //console.log(rating/2);
                             }
 
                             if(data.response.venue.hasOwnProperty('bestPhoto')) {
                                 photo = data.response.venue.bestPhoto.prefix + "256x256" + data.response.venue.bestPhoto.suffix;
                                 places["f" + data.response.venue.id].photo = photo;
-                                console.log(photo);
+                                //console.log(photo);
+                            }
+                            //phone number
+                            if(data.response.venue.hasOwnProperty('contact'))
+                            {
+                                if(data.response.venue.contact.hasOwnProperty('formattedPhone'))
+                                {
+                                    places["f" + data.response.venue.id].international_phone_number = data.response.venue.contact.formattedPhone;
+                                }
                             }
                             showPlace("f" + data.response.venue.id);
                         }
@@ -66,7 +74,7 @@ function addPlaces(type, radius) {
 
             });
 
-    console.log(places);
+    //console.log(places);
 }
 
 function readTextFile(file, callback) {
@@ -119,7 +127,7 @@ function eventinfos()
             eventTagss.push(eventTags.tag[i].id);
             i = i+1;
         }
-        console.log(eventTagss);
+        //console.log(eventTagss);
 
         $('#title').html("<h2>" + eventTitle + "</h2>" );
         $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block178.url + "\/>");
@@ -271,7 +279,18 @@ function search(type, distance)
                     if(results[i].hasOwnProperty("photos"))
                     {
                          places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});
+                         
                     }
+                    
+                    placesService.getDetails({placeId:results[i].place_id},function(result, status){
+                        if(status === google.maps.places.PlacesServiceStatus.OK)
+                        {
+                             if(result.hasOwnProperty('international_phone_number'))
+                             {
+                                places['g' + result.place_id].international_phone_number = result.international_phone_number;   
+                              }
+                        }
+                    });
                     showPlace(placeId);
                 }
             }
@@ -312,7 +331,8 @@ function searchHerePlaces(type, distance)
             showPlace(place.id);
         }
     },
-    function(data) {console.log(data);});
+    function(data) {//console.log(data);
+});
 
 }
 function showPlace(place_id)
@@ -477,8 +497,8 @@ function getFoursquareReviews(place_id) {
                 reviews_div.innerHTML += '<li><blockquote>' + tips[i].text + '<footer>' + tips[i].user.firstName + ' ' + tips[i].user.lastName + '</footer>'+ '</blockquote></li>';
             }
 
-            console.log('tips:' + count);
-            console.log(tips);
+            //console.log('tips:' + count);
+            //console.log(tips);
         });
 
     reviews_div.innerHTML += "</ul>";
@@ -563,4 +583,28 @@ function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
+}
+
+function Integration()
+{
+   
+   for(var placeid in places){
+       if(placeid.charAt(0) === 'f' && places[placeid].hasOwnProperty('international_phone_number'))
+       {
+           for(var place_id in places)
+           {
+               if(place_id.charAt(0)=== 'g' && places[place_id].hasOwnProperty('international_phone_number'))
+               {
+                   //compare phone
+                   if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
+                   {
+                       console.log("g:" + places[place_id].international_phone_number);
+                       console.log("f:" + places[placeid].international_phone_number);
+                   }
+               }
+           }
+       }
+       
+   }
+
 }
