@@ -247,7 +247,7 @@ function onSearchButton()
     search(categorie[type].google,radius);
     //search foursquare
     addPlaces(categorie[type].foursquare,radius);
-    searchHerePlaces(categorie[type].here,radius);
+    //searchHerePlaces(categorie[type].here,radius);
 
 }
 
@@ -289,6 +289,14 @@ function search(type, distance)
                              {
                                 places['g' + result.place_id].international_phone_number = result.international_phone_number;   
                               }
+                              
+                             if(result.hasOwnProperty('rating'))
+                             {
+                                places['g' + result.place_id].rating = result.rating;   
+                             }else
+                             {
+                                 places['g' + result.place_id].rating = -1;  
+                             }
                         }
                     });
                     showPlace(placeId);
@@ -408,7 +416,13 @@ function showPlace(place_id)
         rating_star_div.setAttribute('data-rateit-value',places[place_id].rating);
         rating_star_div.setAttribute('data-rateit-ispreset',"true");
         rating_star_div.setAttribute('data-rateit-readonly',"true");
-        rating_div.innerHTML = places[place_id].rating;
+        if(places[place_id].rating<0)
+        {
+            rating_div.innerHTML = "This place has not been rated";
+        }else
+        {
+            rating_div.innerHTML = places[place_id].rating;
+        }
         //rating by aspect div
         if(places[place_id].hasOwnProperty('aspects'))
         {
@@ -598,8 +612,8 @@ function Integration()
                    //compare phone
                    if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
                    {
-                       console.log("g:" + places[place_id].international_phone_number);
-                       console.log("f:" + places[placeid].international_phone_number);
+                       console.log("Merge: " + places[place_id].international_phone_number);
+                       Merge(place_id,placeid);
                    }
                }
            }
@@ -607,4 +621,49 @@ function Integration()
        
    }
 
+}
+
+function merge(place_g, place_f)
+{
+    //merge photo
+    if(places[place_g].hasOwnProperty('photo') && places[place_g].photo.indexOf('imageNotFound')>-1)
+    {
+        if(places[place_f].hasOwnProperty('photo'))
+        {
+                places[place_g] = places[place_f].photo;
+        }
+    }
+    //merge rating ( sum(percent[i]* rating[i]))
+    if(places[place_f].hasOwnProperty('rating'))
+    {
+        if(places[place_g].hasOwnProperty('rating'))
+        {
+            if(reviews.hasOwnProperty(place_g) && reviews.hasOwnProperty(place_f))
+            {
+                var nb_f = reviews[place_f].length; 
+                var nb_g = reviews[place_g].length;
+                var total = nb_f + nb_g;
+                if(nb_f>0 && nb_g>0)
+                {
+                    places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_g].rating;
+                }
+            }
+        }else
+        {
+            places[place_g].rating = places[place_f].rating;
+        }
+    }
+    //merge reviews
+    if(reviews.hasOwnProperty(place_f))
+    {
+        if(reviews.hasOwnProperty(place_g))
+        {
+            reviews[place_g].concat(reviews[place_f]);
+        }else
+        {
+            reviews[place_g] = reviews[place_f];
+        }
+    }
+    //delete foursquare data
+    delete places[place_f];
 }
