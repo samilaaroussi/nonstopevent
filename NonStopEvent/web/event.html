@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/weatherIcons/css/weather-icons.min.css">
@@ -14,10 +13,10 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
@@ -54,20 +53,20 @@
         </div>
     </div>
 </div>
-<div class="navbar navbar static-top sub-navbar">
+<div class="row" id="subnav" style="padding: 20px 0;">
     <div class="container">
-        <div class="navbar-header">
-                <select class="bootstrap-select" id="type">
-                    <option value="hotel">hotel</option>
-                    <option value="restaurant">restaurant</option>
-                    <option value="bar">bar</option>
-                    <option value="train_station">train station</option>
-                    <option value="parking">parking</option>
-                    <option value="airport">airport</option>
+        <div class="col-md-6 col-md-offset-4">
+                <select class="selectpicker" data-width="fit" id="type">
+                    <option value="hotel" data-icon="glyphicon glyphicon-bed">hotel</option>
+                    <option value="restaurant" data-icon="glyphicon glyphicon-cutlery">restaurant</option>
+                    <option value="bar" data-icon="glyphicon glyphicon-glass">bar</option>
+                    <option value="train_station" data-icon="glyphicon glyphicon-dashboard">train station</option>
+                    <option value="parking" data-icon="glyphicon glyphicon-road">parking</option>
+                    <option value="airport" data-icon="glyphicon glyphicon-plane">airport</option>
                 </select>
 
 
-                <select id="radius">
+                <select class="selectpicker" data-width="fit" id="radius">
                     <option value="1" >1km</option>
                     <option value="2" selected>2km</option>
                     <option value="5" >5km</option>
@@ -76,9 +75,9 @@
                 </select>
 
             <a href="#results" onclick="onSearchButton();" class="btn btn-primary" role="button">Search</a>
-            <a href="#results" onclick="Integration();" class="btn btn-primary" role="button">Integrate</a>
-        </div>
+            <a href="#results" onclick="Integration();" class="btn btn-default" role="button">Integrate</a>
     </div>
+        </div>
 </div>
 
 <!--<div class="panel-height">
