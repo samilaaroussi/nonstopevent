@@ -45,17 +45,17 @@ function addPlaces(type, radius) {
 
                     $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20160528',
                         function (data) {
-
                             if(!data.response.venue.hasOwnProperty('rating') &&
                                 !data.response.venue.hasOwnProperty('bestPhoto')){
-
-                                delete places["f" + venues[i].id];
-
+                                delete places["f" + data.response.venue.id];
+                                return;
                             }
                             
                             if(data.response.venue.hasOwnProperty('rating')) {
+                  
                                 rating = data.response.venue.rating;
                                 places["f" + data.response.venue.id].rating = rating/2;
+                                
                                 
                                 ratingColor = ratingBg(rating);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
@@ -307,7 +307,8 @@ function search(type, distance)
                               
                              if(result.hasOwnProperty('rating'))
                              {
-                                places['g' + result.place_id].rating = result.rating;   
+                                places['g' + result.place_id].rating = result.rating;  
+                                places['g' + result.place_id].ratingColor = ratingBg(result.rating);
                              }else
                              {
                                  places['g' + result.place_id].rating = -1;  
