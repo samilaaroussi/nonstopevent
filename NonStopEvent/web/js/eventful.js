@@ -591,8 +591,11 @@ function Integration()
                    //compare phone
                    if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
                    {
-                       console.log("Merge: " + places[place_id].international_phone_number);
-                       Merge(place_id,placeid);
+                       console.log("Merge: " + places[place_id].international_phone_number + places[place_id].name);
+                       merge(place_id,placeid);
+                           //delete foursquare data
+                        delete places[placeid];
+                        break;
                    }
                }
            }
@@ -604,7 +607,6 @@ function Integration()
 
 function merge(place_g, place_f)
 {
-    console.log("merge:" + places[place_g].name);
     //merge photo
     if(places[place_g].hasOwnProperty('photo') && places[place_g].photo.indexOf('imageNotFound')>-1)
     {
@@ -645,8 +647,7 @@ function merge(place_g, place_f)
             reviews[place_g] = reviews[place_f];
         }
     }
-    //delete foursquare data
-    delete places[place_f];
+
     onShowButton();
 }
 
