@@ -28,7 +28,7 @@ function addPlaces(type, radius) {
     var ratingColor = '';
     var photo = [];
     //var intend = 'browse';
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20140806',
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=20&v=20140806',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
@@ -39,7 +39,7 @@ function addPlaces(type, radius) {
                     if(!places.hasOwnProperty("f" + venues[i].id))
                     {
                         places["f" + venues[i].id] = venues[i];
-                        showPlace('f' + venues[i].id);
+
                     }
                     venue = venues[i];
 
@@ -65,6 +65,7 @@ function addPlaces(type, radius) {
 
                             if(data.response.venue.hasOwnProperty('bestPhoto')) {
                                 photo = data.response.venue.bestPhoto.prefix + "256x256" + data.response.venue.bestPhoto.suffix;
+                                //photo = data.response.venue.photos.groups[0].items[0].prefix + "256x256" + data.response.venue.photos.groups[0].items[0].suffix;
                                 places["f" + data.response.venue.id].photo = photo;
                                 //console.log(photo);
                             }
