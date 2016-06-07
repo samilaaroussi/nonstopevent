@@ -50,7 +50,11 @@ li {
     margin-top: 0;
 }
 
-#photos {
+#desc .col-md-3, .col-md-6 {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: -4px;
 }
 
 #desc small{
@@ -146,12 +150,4 @@ blockquote footer {
 
 .ratit {
     vertical-align: middle;
-}
-
-
-.col-md-3, .col-md-6 {
-    float: none;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: -4px;
 }
