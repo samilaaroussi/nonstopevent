@@ -35,6 +35,7 @@ function addPlaces(type, radius) {
                 {
                     //console.log(venues[i].name);
                     //console.log(venues[i].id);
+
                     if(!places.hasOwnProperty("f" + venues[i].id))
                     {
                         places["f" + venues[i].id] = venues[i];
@@ -44,6 +45,14 @@ function addPlaces(type, radius) {
 
                     $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20160528',
                         function (data) {
+
+                            if(!data.response.venue.hasOwnProperty('rating') &&
+                                !data.response.venue.hasOwnProperty('bestPhoto')){
+
+                                delete places["f" + venues[i].id];
+
+                            }
+                            
                             if(data.response.venue.hasOwnProperty('rating')) {
                                 rating = data.response.venue.rating;
                                 places["f" + data.response.venue.id].rating = rating/2;
@@ -273,6 +282,7 @@ function search(type, distance)
             for(var i=0; i<results.length;i++)
             {
                 var placeId = 'g' + results[i].place_id;
+
                 if(!places.hasOwnProperty(placeId))
                 {
                     places[placeId] = results[i];
@@ -336,6 +346,8 @@ function searchHerePlaces(type, distance)
             place.id = 'h' + data.results.items[i].id;
             place.distance = data.results.items[i].distance;
             places[place.id] = place;
+            ratingColor = ratingBg(averageRating);
+            places["h" + place.id].ratingColor = ratingColor;
             showPlace(place.id);
         }
     },
@@ -401,7 +413,7 @@ function showPlace(place_id)
         //show reviews button
 
         var reviews_button =  document.createElement("button");
-        reviews_button.setAttribute("onmouseover","getReviews('"  + place_id + "');");
+        reviews_button.setAttribute("onclick","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-default dropdown-toggle");
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
