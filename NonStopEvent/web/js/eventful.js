@@ -56,11 +56,15 @@ function addPlaces(type, radius) {
                             if(data.response.venue.hasOwnProperty('rating')) {
                                 rating = data.response.venue.rating;
                                 places["f" + data.response.venue.id].rating = rating/2;
-
+                                
                                 ratingColor = ratingBg(rating);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
 
                                 //console.log(rating/2);
+                            }else
+                            {
+                                places["f" + data.response.venue.id].rating = -1;
+                                places["f" + data.response.venue.id].ratingColor = ratingBg(0);
                             }
 
                             if(data.response.venue.hasOwnProperty('bestPhoto')) {
@@ -421,7 +425,7 @@ function showPlace(place_id)
         reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews";
         //staring(rating) div
         var rating_div = document.createElement('span');
-        rating_div.setAttribute('class', 'ratingText')
+        rating_div.setAttribute('class', 'ratingText');
         rating_div.setAttribute('style',"background: #" + places[place_id].ratingColor);
         var rating_star_div = document.createElement('span');
         rating_star_div.setAttribute('class',"rateit");
@@ -586,7 +590,7 @@ function cleanPlaces()
 function ratingBg(rating)
 {
     if(rating < 1) {
-        return "red";
+        return "FF0000";
     }
 
     else if (rating >= 1 && rating < 2){
@@ -638,6 +642,7 @@ function Integration()
 
 function merge(place_g, place_f)
 {
+    console.log();
     //merge photo
     if(places[place_g].hasOwnProperty('photo') && places[place_g].photo.indexOf('imageNotFound')>-1)
     {
@@ -659,6 +664,7 @@ function merge(place_g, place_f)
                 if(nb_f>0 && nb_g>0)
                 {
                     places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_g].rating;
+                    places[place_g].ratingColor = ratingBg(places[place_g].rating);
                 }
             }
         }else
@@ -679,4 +685,14 @@ function merge(place_g, place_f)
     }
     //delete foursquare data
     delete places[place_f];
+    onShowButton();
+}
+
+function onShowButton()
+{
+    document.getElementById('results').innerHTML = "";
+    for(var key in places)
+    {
+        showPlace(key);
+    }
 }
