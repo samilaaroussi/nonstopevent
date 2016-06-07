@@ -1,3 +1,6 @@
+body {
+    font-size: 14px;
+}
 .navbar {
     margin-bottom: 0 !important;
     background: #545FAF;
@@ -41,6 +44,13 @@ li {
 
     background: #fff;
     color: #333;
+}
+
+#desc h2 {
+    margin-top: 0;
+}
+
+#photos {
 }
 
 #desc small{
@@ -95,6 +105,14 @@ li {
     background: #7F9ED3;
 }
 
+#blurBg {
+    position: absolute;
+    width: 100%;
+    height: auto;
+}
+
+
+
 blockquote {
     font-size: 16px;
 }
@@ -130,10 +148,10 @@ blockquote footer {
     vertical-align: middle;
 }
 
-.glyphicon { margin-right:5px;}
-.section-box h2 { margin-top:0px;}
-.section-box h2 a { font-size:15px; }
-.glyphicon-heart { color:#e74c3c;}
-.glyphicon-comment { color:#27ae60;}
-.separator { padding-right:5px;padding-left:5px; }
-.section-box hr {margin-top: 0;margin-bottom: 5px;border: 0;border-top: 1px solid rgb(199, 199, 199);}
+
+.col-md-3, .col-md-6 {
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: -4px;
+}

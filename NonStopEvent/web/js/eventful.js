@@ -147,7 +147,12 @@ function eventinfos()
         $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block178.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
+        $('#blurBg').backgroundBlur({
+            imageURL : oData.images.image[0].large.url,
+            blurAmount : 50,
+            imageClass : 'bg-blur'
 
+        });
     var req = $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=' + eventCity + '&APPID=ae29dcbbd7d458f1d3ef66feb83120b7&units=metric');
     //usage:
     readTextFile("styles/weatherIcons/weatherIcons.json", function(text){
@@ -375,7 +380,7 @@ function showPlace(place_id)
         //show reviews button
 
         var reviews_button =  document.createElement("button");
-        reviews_button.setAttribute("onclick","getReviews('"  + place_id + "');");
+        reviews_button.setAttribute("onmousehover","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-default dropdown-toggle");
         reviews_button.setAttribute("data-toggle","collapse");
         reviews_button.setAttribute("data-target","#div"+place_id);
@@ -392,7 +397,7 @@ function showPlace(place_id)
         rating_star_div.setAttribute('data-rateit-readonly',"true");
         if(places[place_id].rating<0)
         {
-            rating_div.innerHTML = "This place has not been rated";
+            rating_div.innerHTML = "No rating";
         }else
         {
             rating_div.innerHTML = places[place_id].rating;
@@ -547,7 +552,7 @@ function cleanPlaces()
 function ratingBg(rating)
 {
     if(rating < 1) {
-        return "FF0000";
+        return "EB4D47";
     }
 
     else if (rating >= 1 && rating < 2){
