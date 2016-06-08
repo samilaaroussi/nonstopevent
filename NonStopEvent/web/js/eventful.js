@@ -118,7 +118,7 @@ function eventinfos()
 
         page_size: 25,
 
-        image_sizes: "block,block100,block178,large,block250",
+        image_sizes: "block,block150,block178,large,block250",
 
     };
 
@@ -144,7 +144,7 @@ function eventinfos()
         //console.log(eventTagss);
 
         $('#title').html("<h2>" + eventTitle + "</h2>" );
-        $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block178.url + "\/>");
+        $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
         $('#blurBg').backgroundBlur({
@@ -212,7 +212,9 @@ function onSearchButton()
 {
     //clean last search result
     cleanPlaces();
-
+    $('#googlemap').removeClass('col-md-12');
+    $('#googlemap').addClass('col-md-6');
+    $('#googlemap').css( "position", "fixed" );
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
 
