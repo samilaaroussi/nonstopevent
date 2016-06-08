@@ -45,6 +45,7 @@ function addPlaces(type, radius) {
 
                     $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160528',
                         function (data) {
+                            
                             if(!data.response.venue.hasOwnProperty('rating') &&
                                 !data.response.venue.hasOwnProperty('bestPhoto')){
                                 delete places["f" + data.response.venue.id];
@@ -81,6 +82,24 @@ function addPlaces(type, radius) {
                                     places["f" + data.response.venue.id].international_phone_number = data.response.venue.contact.formattedPhone;
                                 }
                             }
+                            //get reviews
+                            var f_id = data.response.venue.id;
+                             $.getJSON('https://api.foursquare.com/v2/venues/' + f_id + '/tips/?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160524',
+                             (function (f_id) {
+                                 return function(data)
+                                 {
+                                    tips = data.response.tips.items;
+                                    count = data.response.tips.count;
+                                    reviews['f'+ f_id] = [];
+                                    for(var i=0; i<count; i++)
+                                    {
+                                        reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName,
+                                                                                    text: tips[i].text});
+                                    }
+                                 }
+                                    //console.log('tips:' + count);
+                                    //console.log(tips);
+                                }(f_id)));
                             showPlace("f" + data.response.venue.id);
                         }
                     );
@@ -472,6 +491,7 @@ function showPlace(place_id)
         placeDivCol12.appendChild(span_separator2);
         placeDivCol12.appendChild(rating_div);
         //placeDivCol12.appendChild(reviews_div);
+        //insert_div();
         results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
@@ -479,7 +499,7 @@ function showPlace(place_id)
 
 function getReviews(place_id)
 {
-
+    /*
     switch(place_id[0])
     {
         case 'f':
@@ -493,6 +513,29 @@ function getReviews(place_id)
         case 'h':
 
     }
+    */
+    if(!reviews.hasOwnProperty(place_id))
+    {
+        var modal_header = document.getElementById("place_name");
+        modal_header.innerHTML = places[place_id].name;
+        var modal_body = document.getElementById("reviews_list");
+        modal_body.innerHTML = "This place has not been commented yet";
+        return;
+    }
+                var reviews_for_a_place;
+    
+                reviews_for_a_place = reviews[place_id];
+                var reviews_div = document.getElementById("reviews");
+                var modal_header = document.getElementById("place_name");
+                modal_header.innerHTML = places[place_id].name;
+                var modal_body = document.getElementById("reviews_list");
+                modal_body.innerHTML = "<ul class='list-group'>";
+                for(var i=0; i< reviews_for_a_place.length; i++)
+                {
+
+                    modal_body.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text + '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
+                }
+                modal_body.innerHTML += "</ul>";
 }
 
 
