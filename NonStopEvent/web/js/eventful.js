@@ -4,6 +4,7 @@
 var map;
 var places = {};
 var reviews = {};
+var markers = {};
 var placesService;
 var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",here:"hotel"},
                 restaurant:{google:"restaurant",foursquare:"4d4b7105d754a06374d81259",here:"restaurant"},
@@ -12,6 +13,7 @@ var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",h
                 parking:{google:"parking",foursquare:"4c38df4de52ce0d596b336e1"},
                 airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"},
             };
+
 var here;
 var venue;
 function addPlaces(type, radius) {
@@ -208,10 +210,11 @@ var myLatLng = new google.maps.LatLng(parseFloat(latitude),parseFloat(longitude)
 map.setCenter(myLatLng);
 map.setZoom(14);
         map.setOptions({ scrollwheel: false });
+
  var marker = new google.maps.Marker({
     position: myLatLng,
     map: map,
-  });
+    icon: 'images/icon_blue.png'  });
     });
 
 }
@@ -231,9 +234,21 @@ function onSearchButton()
 {
     //clean last search result
     cleanPlaces();
-    $('#googlemap').removeClass('col-md-12');
+    //change google map size
+     $('#googlemap').removeClass('col-md-12');
     $('#googlemap').addClass('col-md-6');
     $('#googlemap').css( "position", "fixed" );
+    //re-center google map
+    google.maps.event.trigger(map, "resize");
+    var descDiv = document.getElementById('desc');
+    var latitude = descDiv.getAttribute('latitude')
+    var longitude = descDiv.getAttribute('longitude');
+   
+    //console.log(parseFloat(latitude) +' ' + parseFloat(longitude));
+    var myLatLng = new google.maps.LatLng(parseFloat(latitude),parseFloat(longitude));
+    map.setCenter(myLatLng);
+    map.setZoom(14);
+   
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
 
@@ -316,6 +331,12 @@ function search(type, distance)
                      {
                         reviews[placeId] = result.reviews;
                      }
+                     //marker
+                     markers['g'+placeId] = new google.maps.Marker({
+                        position: result.geometry.location,
+                        map: map,
+                        animation: google.maps.Animation.DROP,
+                    });
                     showPlace('g' + result.place_id);
                         }else
                         {
