@@ -349,7 +349,7 @@ function showPlace(place_id)
         var place = places[place_id];
 
         var placeDiv = document.createElement("div");
-        placeDiv.setAttribute("class","col-md-6");
+        placeDiv.setAttribute("class","col-md-12");
         placeDiv.setAttribute("id", place_id);
 
         //place div well

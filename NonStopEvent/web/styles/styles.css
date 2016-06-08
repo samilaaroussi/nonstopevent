@@ -1,5 +1,6 @@
 body {
     font-size: 14px;
+    height: 100%;
 }
 .navbar {
     margin-bottom: 0 !important;
@@ -19,7 +20,7 @@ body {
     background: #554FAF !important;
 }
 .panel-height {
-    height: 2%; / change according to your requirement/
+    height: 2%;
 }
 
 .no-gutters {
@@ -50,7 +51,7 @@ li {
     margin-top: 0;
 }
 
-#desc .col-md-3, .col-md-6 {
+#desc .col-md-3, #desc .col-md-6 {
     float: none;
     display: inline-block;
     vertical-align: middle;
@@ -61,6 +62,12 @@ li {
     color: #eee;
 }
 
+.fixed {
+    position: fixed;
+}
+.scrollit {
+}
+
 #twt{
     background: #4099FF;
     color: #fff;
@@ -68,6 +75,11 @@ li {
 
 #twitterandmap {
     background: #545FAF;
+}
+
+.places {
+   background: #f5f5f5;
+    min-height: 320px;
 }
 
 #mapdesc {
@@ -82,6 +94,8 @@ li {
 
 #googlemap{
     height:300px;
+    margin: 20px 0;
+    position: fixed;
 }
 
 .deg {
@@ -103,10 +117,12 @@ li {
 
 #results {
     margin-top: 20px;
+    /*height: 300px;
+    overflow-y:scroll;*/
 }
 
 #subnav {
-    background: #7F9ED3;
+    background: #D0DCF5;
 }
 
 #blurBg {
