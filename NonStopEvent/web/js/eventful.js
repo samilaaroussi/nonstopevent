@@ -251,29 +251,30 @@ function search(type, distance)
 
                 if(!places.hasOwnProperty(placeId))
                 {
+                    //place id
                     places[placeId] = results[i];
-                    if(results[i].hasOwnProperty("photos"))
-                    {
-                         places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});
-                         
-                    }
+                    //get place detail
                     setTimeout(function(param){    
                     placesService.getDetails(param,function(result, stat){
                         
                         if(stat === google.maps.places.PlacesServiceStatus.OK)
-                        {
+                        {   //place id
                             var placeId = 'g' + result.place_id;
+                            //place name
                             places[placeId].name = result.name;
+                            //phone number
                              if(result.hasOwnProperty('international_phone_number'))
                              {
                                 places[placeId].international_phone_number = result.international_phone_number;   
                               }
+                              //photos
                     if(result.hasOwnProperty("photos"))
                     {
                          places[placeId].photo= result.photos[0].getUrl({maxHeight:256,maxWidth:256});
                          places[placeId].photos = result.photo;
                          
                     }
+                    //rating
                     if(result.hasOwnProperty('rating'))
                     {
                                 places[placeId].rating = result.rating;  
@@ -283,7 +284,11 @@ function search(type, distance)
                                  places[placeId].rating = -1;  
                                  places[placeId].ratingColor = ratingBg(-1);
                     }
-                             
+                     //reviews        
+                     if(result.hasOwnProperty('reviews'))
+                     {
+                        reviews[placeId] = result.reviews;
+                     }
                     showPlace('g' + result.place_id);
                         }else
                         {
@@ -401,7 +406,7 @@ function showPlace(place_id)
         var reviews_button =  document.createElement("button");
         reviews_button.setAttribute("onmousehover","getReviews('"  + place_id + "');");
         reviews_button.setAttribute("class","btn btn-default dropdown-toggle");
-        reviews_button.setAttribute("data-toggle","collapse");
+        reviews_button.setAttribute("data-toggle","modal");
         reviews_button.setAttribute("data-target","#div"+place_id);
         reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews";
         //staring(rating) div
@@ -445,8 +450,9 @@ function showPlace(place_id)
 
         //review divs
         var reviews_div =  document.createElement("div");
-        reviews_div.setAttribute("class","collapse in");
+        reviews_div.setAttribute("class","modal fade");
         reviews_div.setAttribute("id","div" + place_id);
+        reviews_div.setAtribute("role","dialog");
         //append divs
 
         placeDiv.appendChild(placeDivWell);
@@ -487,7 +493,6 @@ function getReviews(place_id)
     }
 }
 
-var loading = false;
 
 function getFoursquareReviews(place_id) {
 
