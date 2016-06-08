@@ -264,6 +264,12 @@ function search(type, distance)
                             var placeId = 'g' + result.place_id;
                             //place name
                             places[placeId].name = result.name;
+                            //clean data
+                            if( (!result.hasOwnProperty('photos'))&& (!result.hasOwnProperty('rating')) && (!result.hasOwnProperty('reviews')))
+                            {
+                                delete places[placeId];
+                                return;
+                            }
                             //phone number
                              if(result.hasOwnProperty('international_phone_number'))
                              {
@@ -522,8 +528,16 @@ function getFoursquareReviews(place_id) {
 
 function getGoogleReviews(place_id)
 {
-    var reviews_for_a_place;
-
+    if(!reviews.hasOwnProperty('g' + place_id))
+    {
+        var modal_header = document.getElementById("place_name");
+        modal_header.innerHTML = places['g' + place_id].name;
+        var modal_body = document.getElementById("reviews_list");
+        modal_body.innerHTML = "This place has not been commented yet";
+        return;
+    }
+                var reviews_for_a_place;
+    
                 reviews_for_a_place = reviews['g' + place_id];
                 var reviews_div = document.getElementById("reviews");
                 var modal_header = document.getElementById("place_name");
