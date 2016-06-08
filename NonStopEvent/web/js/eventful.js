@@ -454,7 +454,7 @@ function showPlace(place_id)
         var reviews_div =  document.createElement("div");
         reviews_div.setAttribute("class","modal fade");
         reviews_div.setAttribute("id","div" + place_id);
-        reviews_div.setAtribute("role","dialog");
+        reviews_div.setAttribute("role","dialog");
         //append divs
 
         placeDiv.appendChild(placeDivWell);
