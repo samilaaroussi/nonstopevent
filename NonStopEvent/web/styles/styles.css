@@ -130,10 +130,9 @@ li {
     height: auto;
 }
 
-
-
 blockquote {
     font-size: 16px;
+    text-align: justify;
 }
 blockquote footer {
     text-transform: capitalize;
