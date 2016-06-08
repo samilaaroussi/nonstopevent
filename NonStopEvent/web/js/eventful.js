@@ -181,7 +181,7 @@ function eventinfos()
             var prefix = 'wi wi-';
             var code = resp.weather[0].id;
             var icon = weatherIcons[code].icon;
-            var deg = resp.main.temp;
+            var deg = Math.round(resp.main.temp);
 
             $('.deg').html(deg + "°");
             $('.degDesc').html(eventCity + ", " + eventCountry);
@@ -234,6 +234,7 @@ function onSearchButton()
     $('#googlemap').removeClass('col-md-12');
     $('#googlemap').addClass('col-md-6');
     $('#googlemap').css( "position", "fixed" );
+    google.maps.event.trigger(map, 'resize');
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
 
