@@ -238,7 +238,7 @@ function onSearchButton()
      $('#googlemap').removeClass('col-md-12');
     $('#googlemap').addClass('col-md-6');
     $('#googlemap').css( "position", "fixed" );
-<<<<<<< HEAD
+
     //re-center google map
     google.maps.event.trigger(map, "resize");
     var descDiv = document.getElementById('desc');
@@ -249,10 +249,8 @@ function onSearchButton()
     var myLatLng = new google.maps.LatLng(parseFloat(latitude),parseFloat(longitude));
     map.setCenter(myLatLng);
     map.setZoom(14);
-   
-=======
-    google.maps.event.trigger(map, 'resize');
->>>>>>> origin/master
+
+
     var type = document.getElementById('type').value;
     var radius = 1000 * parseInt(document.getElementById('radius').value);
 
