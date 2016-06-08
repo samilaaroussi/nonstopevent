@@ -28,7 +28,7 @@ function addPlaces(type, radius) {
     var ratingColor = '';
     var photo = [];
     //var intend = 'browse';
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON +'&section=' + type + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=20&v=20140806',
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=20&v=20140806',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
@@ -43,7 +43,7 @@ function addPlaces(type, radius) {
                     }
                     venue = venues[i];
 
-                    $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=10&v=20160528',
+                    $.getJSON('https://api.foursquare.com/v2/venues/' + venue.id + '?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160528',
                         function (data) {
                             if(!data.response.venue.hasOwnProperty('rating') &&
                                 !data.response.venue.hasOwnProperty('bestPhoto')){
@@ -234,16 +234,19 @@ function search(type, distance)
             lat: parseFloat(descDiv.getAttribute("latitude"))
         },
         types: [type],
-        radius: distance,
+        radius: distance
     };
     placesService = new google.maps.places.PlacesService(map);
 
-    placesService.nearbySearch(filter,function(results,status)
+
+    placesService.radarSearch(filter,function(results,status)
     {
         if(status === google.maps.places.PlacesServiceStatus.OK)
         {
+            var count_g = 0;
             for(var i=0; i<results.length;i++)
             {
+                //filter.next_page_token = next_page_token;
                 var placeId = 'g' + results[i].place_id;
 
                 if(!places.hasOwnProperty(placeId))
@@ -254,37 +257,53 @@ function search(type, distance)
                          places[placeId].photo= results[i].photos[0].getUrl({maxHeight:256,maxWidth:256});
                          
                     }
-                    
-                    placesService.getDetails({placeId:results[i].place_id},function(result, status){
-                        if(status === google.maps.places.PlacesServiceStatus.OK)
+                    setTimeout(function(param){    
+                    placesService.getDetails(param,function(result, stat){
+                        
+                        if(stat === google.maps.places.PlacesServiceStatus.OK)
                         {
+                            var placeId = 'g' + result.place_id;
+                            places[placeId].name = result.name;
                              if(result.hasOwnProperty('international_phone_number'))
                              {
-                                places['g' + result.place_id].international_phone_number = result.international_phone_number;   
+                                places[placeId].international_phone_number = result.international_phone_number;   
                               }
-                              
-                             if(result.hasOwnProperty('rating'))
-                             {
-                                places['g' + result.place_id].rating = result.rating;  
-                                places['g' + result.place_id].ratingColor = ratingBg(result.rating);
-                             }else
-                             {
-                                 places['g' + result.place_id].rating = -1;  
-                                 places['g' + result.place_id].ratingColor = ratingBg(-1);
-                             }
-                             showPlace('g' + result.place_id);
+                    if(result.hasOwnProperty("photos"))
+                    {
+                         places[placeId].photo= result.photos[0].getUrl({maxHeight:256,maxWidth:256});
+                         places[placeId].photos = result.photo;
+                         
+                    }
+                    if(result.hasOwnProperty('rating'))
+                    {
+                                places[placeId].rating = result.rating;  
+                                places[placeId].ratingColor = ratingBg(result.rating);
+                    }else
+                    {
+                                 places[placeId].rating = -1;  
+                                 places[placeId].ratingColor = ratingBg(-1);
+                    }
+                             
+                    showPlace('g' + result.place_id);
+                        }else
+                        {
+                            console.log("get place detail exception status: "+ status);
+                            clearTimeout();
                         }
                         
-                    });
+                    }); // get place detail
+                },500*count_g++,{placeId:results[i].place_id});
                     
                 }
             }
-
-
+            
+        }else
+        {
+            console.log("google rader search exception");
         }
-    });
-
-
+        
+    });//google radar search
+   
 }
 
 function searchHerePlaces(type, distance)
