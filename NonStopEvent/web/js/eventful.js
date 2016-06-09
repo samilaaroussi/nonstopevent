@@ -362,7 +362,12 @@ function search(type, distance)
                      //reviews        
                      if(result.hasOwnProperty('reviews'))
                      {
-                        reviews[placeId] = result.reviews;
+                        var g_reviews =  result.reviews;
+                        for(var i=0; i<g_reviews.length; i++)
+                        {
+                            g_reviews[i].author_name += " @ google";
+                        }
+                        reviews[placeId] = g_reviews;
                      }
                      //marker
                      markers[placeId] = new google.maps.Marker({
@@ -805,7 +810,7 @@ function merge(place_g, place_f)
     {
         if(places[place_f].hasOwnProperty('photo'))
         {
-                places[place_g] = places[place_f].photo;
+                places[place_g].photo = places[place_f].photo;
         }
     }
     //merge rating ( sum(percent[i]* rating[i]))
@@ -842,14 +847,5 @@ function merge(place_g, place_f)
         }
     }
 
-    //onShowButton();
-}
-
-function onShowButton()
-{
-    document.getElementById('results').innerHTML = "";
-    for(var key in places)
-    {
-        showPlace(key);
-    }
+    
 }
