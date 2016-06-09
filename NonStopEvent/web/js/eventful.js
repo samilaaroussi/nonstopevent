@@ -97,7 +97,7 @@ function addPlaces(type, radius) {
                                         reviews['f'+ f_id] = [];
                                         for(var i=0; i<count; i++)
                                         {
-                                            reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName,
+                                            reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName + ' @ foursquare',
                                                                                         text: tips[i].text});
                                         }
                                     }
@@ -340,11 +340,14 @@ function search(type, distance)
                         reviews[placeId] = result.reviews;
                      }
                      //marker
-                     markers['g'+placeId] = new google.maps.Marker({
+                     markers[placeId] = new google.maps.Marker({
                         position: result.geometry.location,
                         map: map,
                         animation: google.maps.Animation.DROP,
                     });
+                    markers[placeId].place_id =  placeId; 
+                    markers[placeId].addListener('click', function() { document.getElementById( this.place_id).scrollIntoView(); });
+                    
                     showPlace('g' + result.place_id);
                         }else
                         {
@@ -508,9 +511,8 @@ function showPlace(place_id)
 
                 rating_div.appendChild(rating_aspect_div);
             }
-        }
-        
-        
+        }        
+
 
         //append divs
 
@@ -533,6 +535,7 @@ function showPlace(place_id)
         //results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
+        
 }
 
 function insert_div(resultsDiv,placeDiv, rank)
@@ -678,6 +681,7 @@ function cleanPlaces()
     results.innerHTML = "";
     places = {};
     reviews = {};
+    
 }
 
 function cleanMarkers()
