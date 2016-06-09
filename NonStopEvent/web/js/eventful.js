@@ -30,7 +30,7 @@ function addPlaces(type, radius) {
     var ratingColor = '';
     var photo = [];
     //var intend = 'browse';
-        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=20&v=20140806' + '&intent=browse',
+        $.getJSON('https://api.foursquare.com/v2/venues/search?ll='+ LATLON + '&categoryId=' + type +'&radius='+radius+ '&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&limit=50&v=20140806' + '&intent=browse',
             function (data) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
@@ -60,7 +60,7 @@ function addPlaces(type, radius) {
                                 places["f" + data.response.venue.id].rating = rating/2;
                                 
                                 
-                                ratingColor = ratingBg(rating);
+                                ratingColor = ratingBg(rating/2);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
 
                                 //console.log(rating/2);
@@ -92,17 +92,22 @@ function addPlaces(type, radius) {
                                  {
                                     tips = data.response.tips.items;
                                     count = data.response.tips.count;
-                                    reviews['f'+ f_id] = [];
-                                    for(var i=0; i<count; i++)
+                                    if(count>0)
                                     {
-                                        reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName,
-                                                                                    text: tips[i].text});
+                                        reviews['f'+ f_id] = [];
+                                        for(var i=0; i<count; i++)
+                                        {
+                                            reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName,
+                                                                                        text: tips[i].text});
+                                        }
                                     }
+                                    showPlace("f" + f_id);
                                  }
+                                 
                                     //console.log('tips:' + count);
                                     //console.log(tips);
                                 }(f_id)));
-                            showPlace("f" + data.response.venue.id);
+                            
                         }
                     );
                 }
@@ -252,7 +257,7 @@ function onSearchButton()
 
 
     var type = document.getElementById('type').value;
-    var radius = 1000 * parseInt(document.getElementById('radius').value);
+    var radius =  parseInt(document.getElementById('radius').value);
 
     search(categorie[type].google,radius);
     //search foursquare
@@ -715,8 +720,15 @@ function Integration()
                    {
                        console.log("Merge: " + places[place_id].international_phone_number + places[place_id].name);
                        merge(place_id,placeid);
-                           //delete foursquare data
+                        //delete foursquare data
                         delete places[placeid];
+                        //delete correspond div
+                        var google_div = document.getElementById(placeid);
+                        var four_div = document.getElementById(place_id);
+                        google_div.parentNode.removeChild(google_div);
+                        four_div.parentNode.removeChild(four_div);
+                        //show new merge result
+                        showPlace(place_id);
                         break;
                    }
                }
@@ -751,6 +763,7 @@ function merge(place_g, place_f)
                 {
                     places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_g].rating;
                     places[place_g].ratingColor = ratingBg(places[place_g].rating);
+                    places[place_g].rating = places[place_g].rating.toFixed(2);
                 }
             }
         }else
@@ -770,7 +783,7 @@ function merge(place_g, place_f)
         }
     }
 
-    onShowButton();
+    //onShowButton();
 }
 
 function onShowButton()
