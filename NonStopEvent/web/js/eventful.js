@@ -239,6 +239,7 @@ function onSearchButton()
 {
     //clean last search result
     cleanPlaces();
+    cleanMarkers();
     //change google map size
      $('#googlemap').removeClass('col-md-12');
     $('#googlemap').addClass('col-md-6');
@@ -671,9 +672,21 @@ function initHere()
 
 function cleanPlaces()
 {
-    places= {};
+    delete places;
+    delete reviews;
     var results = document.getElementById("results");
     results.innerHTML = "";
+    places = {};
+    reviews = {};
+}
+
+function cleanMarkers()
+{
+    for(var key in markers)
+    {
+        markers[key].setMap(null);
+    }
+    markers = {};
 }
 
 function ratingBg(rating)
