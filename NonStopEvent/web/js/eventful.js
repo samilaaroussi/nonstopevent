@@ -761,9 +761,9 @@ function merge(place_g, place_f)
                 var total = nb_f + nb_g;
                 if(nb_f>0 && nb_g>0)
                 {
-                    places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_g].rating;
-                    places[place_g].ratingColor = ratingBg(places[place_g].rating);
+                    places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_f].rating;                   
                     places[place_g].rating = places[place_g].rating.toFixed(2);
+                     places[place_g].ratingColor = ratingBg(places[place_g].rating);
                 }
             }
         }else
@@ -776,7 +776,7 @@ function merge(place_g, place_f)
     {
         if(reviews.hasOwnProperty(place_g))
         {
-            reviews[place_g].concat(reviews[place_f]);
+            reviews[place_g] = reviews[place_g].concat(reviews[place_f]);
         }else
         {
             reviews[place_g] = reviews[place_f];
