@@ -86,28 +86,53 @@ function addPlaces(type, radius) {
                             }
                             //get reviews
                             var f_id = data.response.venue.id;
-                             $.getJSON('https://api.foursquare.com/v2/venues/' + f_id + '/tips/?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160524',
+                             $.getJSON('https://api.foursquare.com/v2/venues/' + f_id + '/tips/?client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&v=20160524&sort=popular&limit=100',
                              (function (f_id) {
                                  return function(data)
                                  {
                                     tips = data.response.tips.items;
                                     count = data.response.tips.count;
-                                    if(count>0)
+                                    if(tips)
                                     {
+                                        
                                         reviews['f'+ f_id] = [];
-                                        for(var i=0; i<count; i++)
+                                        for(var i=0; i<tips.length; i++)
                                         {
-                                            reviews['f'+ f_id].push({author_name: tips[i].user.firstName + ' ' + tips[i].user.lastName + ' @ foursquare',
-                                                                                        text: tips[i].text});
+                                            
+                                            var author_name;
+                                            if(tips[i].hasOwnProperty('user'))
+                                            {
+                                                var first_name = "";
+                                                var last_name = "";
+                                                if(tips[i].user.hasOwnProperty('firstName'))
+                                                {
+                                                    first_name = tips[i].user.firstName;
+                                                }
+                                                 if(tips[i].user.hasOwnProperty('lastName'))
+                                                {
+                                                    last_name = tips[i].user.lastName;
+                                                }
+                                                author_name =  first_name+ ' ' + last_name + ' @ foursquare';
+                                            }else
+                                            {
+                                                author_name = "Un utilisateur @ foursquare";
+                                            }
+                                            reviews['f'+ f_id].push({author_name: author_name,
+                                                                     text: tips[i].text});
+                                        }
+                                        var div = document.getElementById('f' + f_id);
+                                        if(div)
+                                        {
+                                            div.setAttribute("nb_reviews",count);
                                         }
                                     }
-                                    showPlace("f" + f_id);
+                                    
                                  }
-                                 
+                                    
                                     //console.log('tips:' + count);
                                     //console.log(tips);
                                 }(f_id)));
-                            
+                                showPlace("f" + f_id);
                         }
                     );
                 }
@@ -724,24 +749,41 @@ function getQueryString(name) {
 
 function Integration()
 {
-   
-   for(var placeid in places){
-       if(placeid.charAt(0) === 'f' && places[placeid].hasOwnProperty('international_phone_number'))
+    //google place id union
+    var g_places_id = [];
+    //foursquare place id union
+    var f_places_id = [];
+       for(var place_id in places)
        {
-           for(var place_id in places)
+           if(place_id.charAt(0) === 'f')
            {
-               if(place_id.charAt(0)=== 'g' && places[place_id].hasOwnProperty('international_phone_number'))
+               f_places_id.push(place_id);
+           }else if( place_id.charAt(0) === 'g')
+           {
+               g_places_id.push(place_id);
+           }
+       }
+   
+   for(var i=0; i<f_places_id.length; i++){
+       
+       var placeid = f_places_id[i];
+       if(places[placeid].hasOwnProperty('international_phone_number'))
+       {
+           for(j=0; j<g_places_id.length;j++)
+           {
+               var place_id = g_places_id[j];
+               if( places[place_id].hasOwnProperty('international_phone_number'))
                {
                    //compare phone
                    if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
                    {
-                       console.log("Merge: " + places[place_id].international_phone_number + places[place_id].name);
+                       console.log("Merge with phone number: " + places[place_id].international_phone_number + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
                        merge(place_id,placeid);
                         //delete foursquare data
                         delete places[placeid];
                         //delete correspond div
-                        var google_div = document.getElementById(placeid);
-                        var four_div = document.getElementById(place_id);
+                        var google_div = document.getElementById(place_id);
+                        var four_div = document.getElementById(placeid);
                         google_div.parentNode.removeChild(google_div);
                         four_div.parentNode.removeChild(four_div);
                         //show new merge result
