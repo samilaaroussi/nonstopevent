@@ -13,7 +13,7 @@ var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",h
                 parking:{google:"parking",foursquare:"4c38df4de52ce0d596b336e1"},
                 airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"},
             };
-
+var rankBy = {rating:0, nb_reviews:1};
 var here;
 var venue;
 function addPlaces(type, radius) {
@@ -407,6 +407,15 @@ function showPlace(place_id)
         placeDiv.setAttribute("class","col-md-12");
         placeDiv.setAttribute("id", place_id);
         placeDiv.setAttribute("onmouseover","getReviews('"  + place_id + "');");
+        placeDiv.setAttribute("rating",place.rating);
+        if(reviews.hasOwnProperty(place_id))
+        {
+            placeDiv.setAttribute("nb_reviews",reviews[place_id].length);
+        }else
+        {
+            placeDiv.setAttribute("nb_reviews",0);
+        }
+        
         //place div well
         var placeDivWell = document.createElement("div");
         placeDivWell.setAttribute("class","well well-sm");
@@ -514,12 +523,39 @@ function showPlace(place_id)
         placeDivCol12.appendChild(span_separator2);
         placeDivCol12.appendChild(rating_div);
         //placeDivCol12.appendChild(reviews_div);
-        //insert_div();
-        results.appendChild(placeDiv);
+        insert_div(results,placeDiv,rankBy.rating);
+        //results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
 }
 
+function insert_div(resultsDiv,placeDiv, rank)
+{
+    if(!resultsDiv.hasChildNodes())
+    {
+        resultsDiv.appendChild(placeDiv);
+        return;
+    }
+    if(rank===rankBy.rating)
+    {
+         for(var i=0; i<resultsDiv.childNodes.length; i++)
+        {
+            var rating = parseFloat(placeDiv.getAttribute("rating"));
+            var _rating = parseFloat(resultsDiv.childNodes[i].getAttribute("rating"));
+
+            if(rating >_rating )
+            {
+                resultsDiv.insertBefore(placeDiv, resultsDiv.childNodes[i]);
+                return;
+            }
+        }
+        resultsDiv.appendChild(placeDiv);
+    }
+    else if(rank=== rankBy.nb_reviews)
+    {
+        
+    }
+}
 function getReviews(place_id)
 {
     /*
