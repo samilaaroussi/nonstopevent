@@ -125,7 +125,13 @@ function addPlaces(type, radius) {
                                             {
                                                 author_name = "Un utilisateur @ foursquare";
                                             }
+                                            var unix_time ="" ;
+                                            if(tips[i].hasOwnProperty('createdAt'))
+                                            {
+                                                unix_time = tips[i].createdAt;
+                                            }
                                             reviews['f'+ f_id].push({author_name: author_name,
+                                                                     time: unix_time,
                                                                      text: tips[i].text});
                                         }
                                         var div = document.getElementById('f' + f_id);
@@ -652,7 +658,8 @@ function getReviews(place_id)
                 for(var i=0; i< reviews_for_a_place.length; i++)
                 {
 
-                    modal_body.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text + '<footer>' + reviews_for_a_place[i].author_name + '</footer>'+ '</blockquote></li>';
+                    modal_body.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text + '<footer>' + reviews_for_a_place[i].author_name + 
+                                            ' ' + timeConverter(reviews_for_a_place[i].time) +  '</footer>'+ '</blockquote></li>';
                 }
                 modal_body.innerHTML += "</ul>";
 }
@@ -963,4 +970,21 @@ function getDistanceFromLatLonInMeter(lat1,lon1,lat2,lon2) {
 
 function deg2rad(deg) {
   return deg * (Math.PI/180)
+}
+
+function timeConverter(UNIX_timestamp){
+  if((typeof UNIX_timestamp!=='undefined'))
+  {
+    var a = new Date(UNIX_timestamp * 1000);
+    var year = a.getFullYear();
+     var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + '/' + month + '/' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  }
+  return "";
 }
