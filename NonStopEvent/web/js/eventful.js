@@ -409,6 +409,7 @@ function search(type, distance)
                         }else
                         {
                             console.log("get place detail exception status: "+ status);
+                            delete places['g' + param.placeId];
                             count_g++;
                         }
                         
