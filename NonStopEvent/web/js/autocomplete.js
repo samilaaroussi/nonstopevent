@@ -21,12 +21,13 @@ function init(){
 }
       
 function onPlaceChanged() {
+  setAutocompleteCountry();
   var place = autocomplete.getPlace();
   if (place.geometry) {
       //document.cookie = "ville="
       get_pop_events();
   } else {
-    document.getElementById('autocomplete').placeholder = 'Ville';
+    document.getElementById('autocomplete').placeholder = 'City';
   }
   
 }
