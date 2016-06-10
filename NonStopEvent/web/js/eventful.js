@@ -326,8 +326,16 @@ function search(type, distance)
 
                 if(!places.hasOwnProperty(placeId))
                 {
-                    //place id
                     places[placeId] = results[i];
+                    /*
+                    //place id
+                    places[placeId].place_id = results[i].place_id;
+                    //latlng
+                    places[placeId].geometry = {};
+                    places[placeId].geometry.location = {};
+                    places[placeId].geometry.location.lat = results[i].geometry.location.lat;
+                    places[placeId].geometry.location.lng = results[i].geometry.location.lng;
+                    */
                     //get place detail
                     setTimeout(function(param){    
                     placesService.getDetails(param,function(result, stat){
@@ -337,6 +345,8 @@ function search(type, distance)
                             var placeId = 'g' + result.place_id;
                             //place name
                             places[placeId].name = result.name;
+                            
+                            //address
                             if(result.hasOwnProperty('vicinity'))
                             {
                                 places[placeId].vicinity = formatString(result.vicinity);
@@ -779,13 +789,14 @@ function Integration()
                g_places_id.push(place_id);
            }
        }
-   //integration based on phone number
+   
    for(var i=0; i<f_places_id.length; i++){
        
        var placeid = f_places_id[i];
        for(j=0; j<g_places_id.length;j++)
        {
             var place_id = g_places_id[j];
+            //integration based on phone number
             if(places[placeid].hasOwnProperty('international_phone_number'))
             {
                     if( places[place_id].hasOwnProperty('international_phone_number'))
@@ -812,6 +823,36 @@ function Integration()
             }
      }
    }
+   
+    //foursquare place id union
+    f_places_id = [];
+    for(var place_id in places)
+       {
+           if(place_id.charAt(0) === 'f')
+           {
+               f_places_id.push(place_id);
+           }
+       }
+       //merge by distance
+    for(var i=0; i<f_places_id.length; i++){
+       
+       var placeid = f_places_id[i];
+       for(j=0; j<g_places_id.length;j++)
+       {
+            var place_id = g_places_id[j];
+            var lat1 = places[placeid].geometry.location.lat;
+            var lng1 = places[placeid].geometry.location.lng;
+            var lat2 = places[place_id].geometry.location.lat();
+            var lng2 = places[place_id].geometry.location.lng();
+            var dist = getDistanceFromLatLonInMeter(lat1,lng1,lat2,lng2);
+            if( dist < 10)
+            {
+                console.log("Merge by distance: "+ dist + "m" + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                merge(place_id,placeid)
+                break;
+            }
+        }
+    }
 
 }
 
