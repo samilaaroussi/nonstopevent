@@ -16,6 +16,7 @@ var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",h
 var rankBy = {rating:0, nb_reviews:1};
 var here;
 var venue;
+var geocoder;
 function addPlaces(type, radius) {
 
     /***************** Foursquare API *****************/
@@ -35,8 +36,6 @@ function addPlaces(type, radius) {
                 venues = data.response.venues;
                 for(var i=0; i<venues.length; i++)
                 {
-                    //console.log(venues[i].name);
-                    //console.log(venues[i].id);
 
                     if(!places.hasOwnProperty("f" + venues[i].id))
                     {
@@ -53,7 +52,16 @@ function addPlaces(type, radius) {
                                 delete places["f" + data.response.venue.id];
                                 return;
                             }
-                            
+                            //lat lng
+                            places["f" + data.response.venue.id].geometry = {};
+                            places["f" + data.response.venue.id].geometry.location = {};
+                            places["f" + data.response.venue.id].geometry.location.lat = parseFloat(data.response.venue.location.lat);
+                            places["f" + data.response.venue.id].geometry.location.lng = parseFloat(data.response.venue.location.lng);
+                            //address                        
+                            if(data.response.venue.location.hasOwnProperty("address"))
+                            {
+                                places["f" + data.response.venue.id].vicinity = formatString(data.response.venue.location.address);
+                            }
                             if(data.response.venue.hasOwnProperty('rating')) {
                   
                                 rating = data.response.venue.rating;
@@ -63,7 +71,7 @@ function addPlaces(type, radius) {
                                 ratingColor = ratingBg(rating/2);
                                 places["f" + data.response.venue.id].ratingColor = ratingColor;
 
-                                //console.log(rating/2);
+                              
                             }else
                             {
                                 places["f" + data.response.venue.id].rating = -1;
@@ -81,7 +89,7 @@ function addPlaces(type, radius) {
                             {
                                 if(data.response.venue.contact.hasOwnProperty('formattedPhone'))
                                 {
-                                    places["f" + data.response.venue.id].international_phone_number = data.response.venue.contact.formattedPhone;
+                                    places["f" + data.response.venue.id].international_phone_number = formatPhone(data.response.venue.contact.formattedPhone);
                                 }
                             }
                             //get reviews
@@ -128,9 +136,7 @@ function addPlaces(type, radius) {
                                     }
                                     
                                  }
-                                    
-                                    //console.log('tips:' + count);
-                                    //console.log(tips);
+
                                 }(f_id)));
                                 showPlace("f" + f_id);
                         }
@@ -139,7 +145,7 @@ function addPlaces(type, radius) {
 
             });
 
-    //console.log(places);
+
 }
 
 function readTextFile(file, callback) {
@@ -246,7 +252,7 @@ map.setZoom(14);
     map: map,
     icon: 'images/icon_blue.png'  });
     });
-
+geocoder = new google.maps.Geocoder;
 }
 
 
@@ -331,6 +337,11 @@ function search(type, distance)
                             var placeId = 'g' + result.place_id;
                             //place name
                             places[placeId].name = result.name;
+                            if(result.hasOwnProperty('vicinity'))
+                            {
+                                places[placeId].vicinity = formatString(result.vicinity);
+                            }
+                             ;
                             //clean data
                             if( (!result.hasOwnProperty('photos'))&& (!result.hasOwnProperty('rating')) && (!result.hasOwnProperty('reviews')))
                             {
@@ -340,7 +351,7 @@ function search(type, distance)
                             //phone number
                              if(result.hasOwnProperty('international_phone_number'))
                              {
-                                places[placeId].international_phone_number = result.international_phone_number;   
+                                places[placeId].international_phone_number = formatPhone(result.international_phone_number);   
                               }
                               //photos
                     if(result.hasOwnProperty("photos"))
@@ -373,7 +384,7 @@ function search(type, distance)
                      markers[placeId] = new google.maps.Marker({
                         position: result.geometry.location,
                         map: map,
-                        animation: google.maps.Animation.DROP,
+                        animation: google.maps.Animation.DROP
                     });
                     markers[placeId].place_id =  placeId; 
                     markers[placeId].addListener('click', function() { document.getElementById( this.place_id).scrollIntoView(); });
@@ -382,7 +393,7 @@ function search(type, distance)
                         }else
                         {
                             console.log("get place detail exception status: "+ status);
-                            clearTimeout();
+                            count_g++;
                         }
                         
                     }); // get place detail
@@ -758,7 +769,7 @@ function Integration()
     var g_places_id = [];
     //foursquare place id union
     var f_places_id = [];
-       for(var place_id in places)
+    for(var place_id in places)
        {
            if(place_id.charAt(0) === 'f')
            {
@@ -768,37 +779,38 @@ function Integration()
                g_places_id.push(place_id);
            }
        }
-   
+   //integration based on phone number
    for(var i=0; i<f_places_id.length; i++){
        
        var placeid = f_places_id[i];
-       if(places[placeid].hasOwnProperty('international_phone_number'))
+       for(j=0; j<g_places_id.length;j++)
        {
-           for(j=0; j<g_places_id.length;j++)
-           {
-               var place_id = g_places_id[j];
-               if( places[place_id].hasOwnProperty('international_phone_number'))
-               {
-                   //compare phone
-                   if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
-                   {
-                       console.log("Merge with phone number: " + places[place_id].international_phone_number + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
-                       merge(place_id,placeid);
-                        //delete foursquare data
-                        delete places[placeid];
-                        //delete correspond div
-                        var google_div = document.getElementById(place_id);
-                        var four_div = document.getElementById(placeid);
-                        google_div.parentNode.removeChild(google_div);
-                        four_div.parentNode.removeChild(four_div);
-                        //show new merge result
-                        showPlace(place_id);
-                        break;
-                   }
-               }
-           }
-       }
-       
+            var place_id = g_places_id[j];
+            if(places[placeid].hasOwnProperty('international_phone_number'))
+            {
+                    if( places[place_id].hasOwnProperty('international_phone_number'))
+                    {     //compare phone
+                        if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
+                        {
+                            console.log("Merge with phone number: " + places[place_id].international_phone_number + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                            merge(place_id,placeid);
+                             break;
+                        }
+                    }    
+              //compare address
+            }else  if(places[placeid].hasOwnProperty('vicinity'))
+            {
+                     if(places[place_id].hasOwnProperty('vicinity'))
+                     {
+                        if(places[place_id].vicinity.indexOf ( places[placeid].vicinity ) > -1)
+                        {
+                            console.log("Merge with address: " + places[place_id].vicinity + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                            merge(place_id,placeid);
+                            break;
+                        }            
+                     }
+            }
+     }
    }
 
 }
@@ -827,7 +839,7 @@ function merge(place_g, place_f)
                 {
                     places[place_g].rating = nb_g/total * places[place_g].rating + nb_f/total * places[place_f].rating;                   
                     places[place_g].rating = places[place_g].rating.toFixed(2);
-                     places[place_g].ratingColor = ratingBg(places[place_g].rating);
+                    places[place_g].ratingColor = ratingBg(places[place_g].rating);
                 }
             }
         }else
@@ -846,6 +858,68 @@ function merge(place_g, place_f)
             reviews[place_g] = reviews[place_f];
         }
     }
-
     
+     //delete foursquare data
+                        delete places[place_f];
+                        //delete correspond div
+                        var google_div = document.getElementById(place_g);
+                        var four_div = document.getElementById(place_f);
+                        google_div.parentNode.removeChild(google_div);
+                        four_div.parentNode.removeChild(four_div);
+                        //show new merge result
+                        showPlace(place_g);
+    
+}
+
+function formatString(str)
+{
+    var result = str.toLowerCase();
+    result = result.replace("avenue"," ave");
+    result = result.replace("street"," st");
+    //split by whitespace
+    result = result.split(',');
+    //trim whitespace
+    result[0] =  result[0].replace(/  +/g, ' ');
+    if(result[0].length<5 && result.length>1)
+    {
+        result = result[0] + result[1];
+    }else
+    {
+        result = result[0];
+    }
+    result =  result.replace(/  +/g, ' ');
+    
+    return result;
+}
+
+function formatPhone(phone)
+{
+    //trim
+
+     var result = phone.replace('\+1','');
+     result = result.replace(/  +/g, ' ');
+     result = result.replace(/\s/g,'');
+     result = result.replace(/\-/g,'');
+     result = result.replace(/\+/g,'');
+     result = result.replace(')','');
+     result = result.replace('(','');
+    return result;
+}
+
+function getDistanceFromLatLonInMeter(lat1,lon1,lat2,lon2) {
+  var R = 6371000; // Radius of the earth in meter
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
 }
