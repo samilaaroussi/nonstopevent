@@ -181,7 +181,7 @@ function eventinfos()
 
         page_size: 25,
 
-        image_sizes: "block,block150,block178,large,block250",
+        image_sizes: "block,block178,large,medium"
 
     };
 
@@ -205,13 +205,20 @@ function eventinfos()
             i = i+1;
         }
         //console.log(eventTagss);
-
+        var event_image ="";
+        if(oData.images.image.hasOwnProperty('medium'))
+        {
+            event_image = oData.images.image;
+        }else
+        {
+            event_image = oData.images.image[0];
+        }
         $('#title').html("<h2>" + eventTitle + "</h2>" );
-        $('.photos').html("<img class=\"img-rounded\" src=" + oData.images.image[0].block.url + "\/>");
+        $('.photos').html("<img class=\"img-rounded\" src=" + event_image.medium.url + "\/>");
         $('.location').html(oData.venue_name);
         $('.start').html("<i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i> Le " + eventStart.toLocaleDateString("fr-FR") + " à " + eventStart.getHours() + "h");
         $('#blurBg').backgroundBlur({
-            imageURL : oData.images.image[0].large.url,
+            imageURL : event_image.large.url,
             blurAmount : 50,
             imageClass : 'bg-blur'
 
@@ -268,7 +275,7 @@ function init() {
 
         map = new google.maps.Map(document.getElementById('map'), {
         });
-        initHere();
+        //initHere();
 
 }
 
@@ -300,6 +307,7 @@ function onSearchButton()
     search(categorie[type].google,radius);
     //search foursquare
     addPlaces(categorie[type].foursquare,radius);
+    //searchHere
     //searchHerePlaces(categorie[type].here,radius);
 
 }
