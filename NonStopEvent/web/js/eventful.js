@@ -294,7 +294,7 @@ function onSearchButton()
     //re-center google map
     google.maps.event.trigger(map, "resize");
     var descDiv = document.getElementById('desc');
-    var latitude = descDiv.getAttribute('latitude')
+    var latitude = descDiv.getAttribute('latitude');
     var longitude = descDiv.getAttribute('longitude');
    
     //console.log(parseFloat(latitude) +' ' + parseFloat(longitude));
@@ -314,7 +314,7 @@ function onSearchButton()
   if(type === "hotel")
   {
     searchExpedia(radius/1000);
-    }
+  }
     
 }
 
@@ -489,13 +489,13 @@ function showPlace(place_id)
         placeDiv.setAttribute("id", place_id);
         placeDiv.setAttribute("onmouseover","getReviews('"  + place_id + "');");
         placeDiv.setAttribute("rating",place.rating);
+        var nb_reviews = 0;
         if(reviews.hasOwnProperty(place_id))
         {
-            placeDiv.setAttribute("nb_reviews",reviews[place_id].length);
-        }else
-        {
-            placeDiv.setAttribute("nb_reviews",0);
+            nb_reviews = reviews[place_id].length;
         }
+            placeDiv.setAttribute("nb_reviews",nb_reviews);
+        
         
         //place div well
         var placeDivWell = document.createElement("div");
@@ -550,7 +550,7 @@ function showPlace(place_id)
         reviews_button.setAttribute("class","btn btn-default");
         reviews_button.setAttribute("data-toggle","modal");
         reviews_button.setAttribute("data-target","#reviews");
-        reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews";
+        reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews<span class='badge'>" + nb_reviews + "</span>";
         //staring(rating) div
         var rating_div = document.createElement('span');
         rating_div.setAttribute('class', 'ratingText');
@@ -629,7 +629,14 @@ function showPlace(place_id)
             placeDivCol12.appendChild(span_label);
         }
         //placeDivCol12.appendChild(reviews_div);
-        insert_div(results,placeDiv,rankBy.rating);
+        var sort = parseInt(document.getElementById("rankBy").value);
+        if(sort === rankBy.rating)
+        {
+            insert_div(results,placeDiv,rankBy.rating);
+        }else if(sort === rankBy.nb_reviews)
+        {
+            insert_div(results,placeDiv,rankBy.nb_reviews);
+        }
         //results.appendChild(placeDiv);
 
         $('div.rateit, span.rateit').rateit();
@@ -660,7 +667,18 @@ function insert_div(resultsDiv,placeDiv, rank)
     }
     else if(rank=== rankBy.nb_reviews)
     {
-        
+        for(var i=0; i<resultsDiv.childNodes.length; i++)
+        {
+        var nb_reviews = parseFloat(placeDiv.getAttribute("nb_reviews"));
+        var _nb_reviews = parseFloat(resultsDiv.childNodes[i].getAttribute("nb_reviews"));
+
+            if(nb_reviews >_nb_reviews )
+            {
+                resultsDiv.insertBefore(placeDiv, resultsDiv.childNodes[i]);
+                return;
+            }
+        }
+        resultsDiv.appendChild(placeDiv);
     }
 }
 function getReviews(place_id)
