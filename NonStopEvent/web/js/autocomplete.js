@@ -18,6 +18,7 @@ function init(){
       
        document.getElementById('country').addEventListener(
       'change', setAutocompleteCountry);
+      setAutocompleteCountry();
 }
       
 function onPlaceChanged() {

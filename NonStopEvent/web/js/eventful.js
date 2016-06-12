@@ -11,12 +11,13 @@ var categorie ={hotel:{google: "lodging",foursquare:"4bf58dd8d48988d1fa931735",h
                 bar:{google:"bar",foursquare:"4bf58dd8d48988d116941735",here:"coffee-tea"},
                 train_station:{google:"train_station",foursquare:"4bf58dd8d48988d129951735"},
                 parking:{google:"parking",foursquare:"4c38df4de52ce0d596b336e1"},
-                airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"},
+                airport:{google:"airport",foursquare:"4bf58dd8d48988d1ed931735",here:"airport"}
             };
 var rankBy = {rating:0, nb_reviews:1};
 var here;
 var venue;
 var geocoder;
+var safe_distance = 20;
 function addPlaces(type, radius) {
 
     /***************** Foursquare API *****************/
@@ -53,6 +54,7 @@ function addPlaces(type, radius) {
                                 return;
                             }
                             //lat lng
+                             places["f" + data.response.venue.id].labels = ["foursquare"];
                             places["f" + data.response.venue.id].geometry = {};
                             places["f" + data.response.venue.id].geometry.location = {};
                             places["f" + data.response.venue.id].geometry.location.lat = parseFloat(data.response.venue.location.lat);
@@ -309,7 +311,11 @@ function onSearchButton()
     addPlaces(categorie[type].foursquare,radius);
     //searchHere
     //searchHerePlaces(categorie[type].here,radius);
-
+  if(type === "hotel")
+  {
+    searchExpedia(radius/1000);
+    }
+    
 }
 
 function search(type, distance)
@@ -359,7 +365,7 @@ function search(type, distance)
                             var placeId = 'g' + result.place_id;
                             //place name
                             places[placeId].name = result.name;
-                            
+                            places[placeId].labels = ["google"];
                             //address
                             if(result.hasOwnProperty('vicinity'))
                             {
@@ -381,7 +387,7 @@ function search(type, distance)
                     if(result.hasOwnProperty("photos"))
                     {
                          places[placeId].photo= result.photos[0].getUrl({maxHeight:256,maxWidth:256});
-                         places[placeId].photos = result.photo;
+                         //places[placeId].photos = result.photo;
                          
                     }
                     //rating
@@ -522,7 +528,8 @@ function showPlace(place_id)
 
         var span_separator2 = document.createElement("span");
         span_separator2.setAttribute("class","separator");
-
+        
+        
 
         //place photo
         var place_photo = document.createElement("img");
@@ -596,6 +603,31 @@ function showPlace(place_id)
         placeDivCol12.appendChild(rating_star_div);
         placeDivCol12.appendChild(span_separator2);
         placeDivCol12.appendChild(rating_div);
+        for(var i=0; i<place.labels.length; i++)
+        {
+            var span_label = document.createElement("span");
+            if(i===0)
+            {
+                span_label.style.marginLeft = "10px";
+            }else
+            {
+                span_label.style.marginLeft = "5px";
+            }
+            switch(place.labels[i])
+            {
+                case "google": 
+                    span_label.setAttribute("class","label label-primary");
+                    break;
+                case "foursquare": 
+                    span_label.setAttribute("class","label label-success");
+                    break;
+                 case "expedia": 
+                    span_label.setAttribute("class","label label-warning");
+                    break;
+            }
+            span_label.innerHTML = place.labels[i];
+            placeDivCol12.appendChild(span_label);
+        }
         //placeDivCol12.appendChild(reviews_div);
         insert_div(results,placeDiv,rankBy.rating);
         //results.appendChild(placeDiv);
@@ -666,9 +698,17 @@ function getReviews(place_id)
                 modal_body.innerHTML = "<ul class='list-group'>";
                 for(var i=0; i< reviews_for_a_place.length; i++)
                 {
-
-                    modal_body.innerHTML += '<li class="list-group-item"><blockquote>' + reviews_for_a_place[i].text + '<footer>' + reviews_for_a_place[i].author_name + 
-                                            ' ' + timeConverter(reviews_for_a_place[i].time) +  '</footer>'+ '</blockquote></li>';
+					var time;
+					if(reviews_for_a_place[i].hasOwnProperty('formattedTime'))
+					{
+						time = reviews_for_a_place[i].formattedTime;
+					}else
+					{ 
+						time = timeConverter(reviews_for_a_place[i].time);
+					}
+				
+                    modal_body.innerHTML += '<li class="list-group-item"><blockquote> <div class="row" style="max-height:100px;overflow-y: scroll">' + reviews_for_a_place[i].text + '</div><footer>' + reviews_for_a_place[i].author_name + 
+                                            ' ' +  time +  '</footer>'+ '</blockquote></li>';
                 }
                 modal_body.innerHTML += "</ul>";
 }
@@ -793,11 +833,11 @@ function Integration()
 {
     //google place id union
     var g_places_id = [];
-    //foursquare place id union
+    //non-google place id union
     var f_places_id = [];
     for(var place_id in places)
        {
-           if(place_id.charAt(0) === 'f')
+           if(place_id.charAt(0) === 'f' || place_id.charAt(0)==='e')
            {
                f_places_id.push(place_id);
            }else if( place_id.charAt(0) === 'g')
@@ -819,7 +859,13 @@ function Integration()
                     {     //compare phone
                         if(!places[place_id].international_phone_number.localeCompare(places[placeid].international_phone_number))
                         {
-                            console.log("Merge with phone number: " + places[place_id].international_phone_number + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                                var source_type = "foursquare";
+                                if(placeid.charAt(0) === 'e')
+                                {
+                                    source_type = "expedia   ";
+                                }
+                                console.log("Merge with phone number: " + places[place_id].international_phone_number + "\n" + source_type + " : " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                            
                             merge(place_id,placeid);
                              break;
                         }
@@ -831,7 +877,13 @@ function Integration()
                      {
                         if(places[place_id].vicinity.indexOf ( places[placeid].vicinity ) > -1)
                         {
-                            console.log("Merge with address: " + places[place_id].vicinity + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                            var source_type = "foursquare";
+                                if(placeid.charAt(0) === 'e')
+                                {
+                                    source_type = "expedia   ";
+                                }
+                                console.log("Merge with address: " + places[place_id].vicinity + "\n" + source_type + " : "+ places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                
                             merge(place_id,placeid);
                             break;
                         }            
@@ -840,11 +892,11 @@ function Integration()
      }
    }
    
-    //foursquare place id union
+    //non-google place id union
     f_places_id = [];
     for(var place_id in places)
        {
-           if(place_id.charAt(0) === 'f')
+           if(place_id.charAt(0) === 'f' || place_id.charAt(0) === 'e')
            {
                f_places_id.push(place_id);
            }
@@ -861,9 +913,14 @@ function Integration()
             var lat2 = places[place_id].geometry.location.lat();
             var lng2 = places[place_id].geometry.location.lng();
             var dist = getDistanceFromLatLonInMeter(lat1,lng1,lat2,lng2);
-            if( dist < 10)
+            if( dist < safe_distance)
             {
-                console.log("Merge by distance: "+ dist + "m" + "\nfoursquare: " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
+                 var source_type = "foursquare";
+                 if(placeid.charAt(0) === 'e')
+                 {
+                    source_type = "expedia   ";
+                 }
+                console.log("Merge by distance: "+ dist + "m" + "\n"+ source_type + " : " + places[placeid].name + "\ngoogle    : " + places[place_id].name);
                 merge(place_id,placeid)
                 break;
             }
@@ -880,6 +937,14 @@ function merge(place_g, place_f)
         if(places[place_f].hasOwnProperty('photo'))
         {
                 places[place_g].photo = places[place_f].photo;
+                if(!places[place_g].hasOwnProperty('photos'))
+                {
+                    places[place_g].photos = [];
+                }
+                if(places[place_f].hasOwnProperty('photos'))
+                {
+                    places[place_g].photos.concat( places[place_f].photos);
+                }
         }
     }
     //merge rating ( sum(percent[i]* rating[i]))
@@ -915,14 +980,21 @@ function merge(place_g, place_f)
             reviews[place_g] = reviews[place_f];
         }
     }
-    
+    //merge label
+    places[place_g].labels = places[place_g].labels.concat(places[place_f].labels);
      //delete foursquare data
                         delete places[place_f];
                         //delete correspond div
                         var google_div = document.getElementById(place_g);
                         var four_div = document.getElementById(place_f);
-                        google_div.parentNode.removeChild(google_div);
-                        four_div.parentNode.removeChild(four_div);
+                        if(google_div)
+                        {
+                            google_div.parentNode.removeChild(google_div);
+                        }
+                        if(four_div)
+                        {
+                            four_div.parentNode.removeChild(four_div);
+                        }
                         //show new merge result
                         showPlace(place_g);
     
@@ -996,4 +1068,125 @@ function timeConverter(UNIX_timestamp){
     return time;
   }
   return "";
+}
+
+function searchExpedia(radius)
+{
+    console.log(radius);
+    var descDiv = document.getElementById('desc');
+    var latitude = parseFloat(descDiv.getAttribute("latitude"));
+    var longitude = parseFloat(descDiv.getAttribute("longitude"));
+    
+    var params = {
+        within: radius.toFixed(2) + 'km',
+        lat: latitude,
+        lng: longitude
+    };
+
+    $.ajax({
+            url: "http://terminal2.expedia.com:80/x/geo/hotels",
+            dataType: "json",
+            data: params,
+            type: "GET",
+            headers: {"Authorization":"expedia-apikey key=6OGIn9cQogbS3gphuJs2wv7KHDHaBScu"},
+            success :  function(results) {
+                for(var i=0; i<results.length;i++)
+                {
+                    var hotel = results[i];
+                    var place_id = 'e' + hotel.source.srcId;
+                    
+                    if(! places.hasOwnProperty(place_id))
+                    {
+                        places[place_id] = {};
+                        places[place_id].labels = ["expedia"];
+                        places[place_id].place_id = place_id;
+                        places[place_id].geometry = {};
+                        places[place_id].geometry.location = {lat:hotel.position.coordinates[1],lng:hotel.position.coordinates[0]};
+                        places[place_id].name = hotel.name;
+                    }
+                
+                //get hotel detail
+                $.ajax({
+                        url: "http://terminal2.expedia.com:80/x/mhotels/info?hotelId=" + hotel.source.srcId,
+                        dataType: "json",
+                        type: "GET",
+                        headers: {"Authorization":"expedia-apikey key=6OGIn9cQogbS3gphuJs2wv7KHDHaBScu"},
+                        success :  function(detail) {
+                            var place_id = 'e' + detail.hotelId;
+                            
+                            if(detail.hasOwnProperty('hotelAddress'))
+                            {
+                                places[place_id].vicinity =  formatString(detail.hotelAddress);
+                            }
+                            if(detail.hasOwnProperty('photos'))
+                            {
+                                places[place_id].photo = 'http://images.trvl-media.com' + detail.photos[0].url;
+                                places[place_id].photos = [];
+                                for(var j=0; j<detail.photos.length;j++)
+                                {
+                                    places[place_id].photos.push('http://images.trvl-media.com'+ detail.photos[j].url);
+                                }
+                                
+                            }
+                            if(detail.hasOwnProperty('hotelGuestRating'))
+                            {
+                                places[place_id].rating = detail.hotelGuestRating;    
+                                places[place_id].ratingColor = ratingBg(detail.hotelGuestRating);
+                            }else
+                            {
+                                places[place_id].rating = -1;
+                                places[place_id].ratingColor = ratingBg(places[place_id].rating);
+                            }
+                            /*                       
+                            if(detail.hasOwnProperty('telesalesNumber'))
+                            {
+                                places[place_id].international_phone_number = formatPhone(detail.telesalesNumber);
+                            }
+                            */
+                        
+                        
+                         //get hotel reviews
+                var review_params = {hotelId: detail.hotelId, 
+                                        summary:false,
+                                        items: 20
+                        };
+                 $.ajax({
+                        url: "http://terminal2.expedia.com:80/x/reviews/hotels",
+                        dataType: "json",
+                        data: review_params,
+                        type: "GET",
+                        hotelId: detail.hotelId,
+                        headers: {"Authorization":"expedia-apikey key=6OGIn9cQogbS3gphuJs2wv7KHDHaBScu"},
+                        success :  function(results) {
+                            var place_id = 'e' + this.hotelId;
+                            var list = results.reviewDetails.reviewCollection.review;
+                            if(list.length >0)
+                            {
+                                reviews[place_id] = [];
+                                for(var j=0; j<list.length;j++)
+                                {
+                                    var review = {};
+                                    var author_name = "Un utilisateur";
+                                    if(list[j].hasOwnProperty('userNickname') && list[j].userNickname.length>0)
+                                    {
+                                        author_name = list[j].userNickname;
+                                    }
+                                    author_name += " @ Expedia";
+                                    review.author_name = author_name;
+                                    review.text =  list[j].reviewText;
+                                    review.formattedTime = list[j].reviewSubmissionTime.replace(/[a-zA-Z]/g,' ');
+                                    reviews[place_id].push(review);
+                                }
+                            }
+                            
+                            showPlace( place_id);
+                        }
+                    });
+                  }
+                  });
+               
+                }
+
+        }
+    });
 }

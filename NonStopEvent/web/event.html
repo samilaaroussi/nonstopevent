@@ -21,19 +21,23 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
     <!--<script type="text/javascript" src="js/instafeed.min.js"></script>-->
+    <!--
     <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
   type="text/javascript" charset="utf-8"></script>
    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" 
       type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="UTF-8"
-      src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
+      src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script> -->
+    <!-- input tags-->
+     <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.css"/>
     <script src="js/lieux.js"></script>
     <script src="js/eventful.js"></script>
     <script src="js/rateit/jquery.rateit.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/background-blur/0.1.3/background-blur.js" type="text/javascript"></script>
 
 </head>
-<body onload="eventinfos();initHere();">
+<body onload="eventinfos();">
 <div class="navbar navbar-static-top">
     <div class="container">
         <div class="navbar-header">
@@ -76,7 +80,7 @@
                     <option value="10000" >10km</option>
                     
                 </select>
-
+            
             <a onclick="onSearchButton();" class="btn btn-primary" role="button">Search</a>
             <a onclick="Integration();" class="btn btn-default" role="button">Integrate</a>
         </div>
