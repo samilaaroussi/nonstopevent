@@ -416,8 +416,21 @@ function search(type, distance)
                         map: map,
                         animation: google.maps.Animation.DROP
                     });
-                    markers[placeId].place_id =  placeId; 
-                    markers[placeId].addListener('click', function() { document.getElementById( this.place_id).scrollIntoView(); });
+
+                    markers[placeId].place_id =  placeId;
+                    var info = new google.maps.InfoWindow({
+                        content: places[placeId].name
+                    });
+                            markers[placeId].addListener('mouseover', function() {
+                                info.open(map, this);
+                            });
+
+                            markers[placeId].addListener('mouseout', function() {
+                                info.close();
+                            });
+
+                            markers[placeId].addListener('click', function() {
+                        document.getElementById(this.place_id).scrollIntoView(); });
                     
                     showPlace('g' + result.place_id);
                         }else
