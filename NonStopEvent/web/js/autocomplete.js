@@ -27,6 +27,7 @@ function onPlaceChanged() {
   if (place.geometry) {
       //document.cookie = "ville="
       get_pop_events();
+      
   } else {
     document.getElementById('autocomplete').placeholder = 'City';
   }

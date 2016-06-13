@@ -4,6 +4,7 @@ var pop_events_divs = [];
 function get_pop_events()
 {
   clear_pop_events();
+  document.getElementById("loading").hidden = false;
   var l = document.getElementById('autocomplete').value;
   var oArgs = {
             app_key:"MBsKVhQWhpZSW9MP",
@@ -44,8 +45,10 @@ function get_pop_events()
           events[i].description = event.description;
       }
       show_more_events(0,events.length-1); 
+      document.getElementById("loading").hidden = true;
     });
     page_num++;
+    
 }
 
 function get_more_pop_events()
@@ -138,11 +141,12 @@ function show_more_events(debut, fin)
 function clear_pop_events()
 {
     page_num = 1;
+    delete events;
+    delete pop_events_divs;
+    pop_events_divs = [];
     events= [];
     var pop_events_container = document.getElementById("pop_events");
-    for(var i=0; i<pop_events_divs.length;i++)
-    {
-        pop_events_container.removeChild(pop_events_divs[i]);
-    }
+   pop_events_container.innerHTML = "";
+    
 }
 

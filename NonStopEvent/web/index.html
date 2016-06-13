@@ -60,14 +60,15 @@
       <option value="uk">United Kingdom</option>
       <option value="cn">China</option>
     </select>
-    <button type="button" class="btn btn-danger" onclick="search();">Search</button>
+    <!--<button type="button" class="btn btn-danger">Search</button>-->
   </form>
 </div>
 <!-- liste des evenements---------------------------------------------------->
 <div class="container text-center bg-grey">
   <h2>Popular Events</h2>
+  <img src='http://i.stack.imgur.com/FhHRx.gif' alt='loading from eventful' hidden='true' id='loading' />
   <div class="row text-center" id="pop_events">
-
+      
   </div>
   <div class="row text-center" hidden="true" id="more">
     <h3><span class="label label-default" onclick="get_more_pop_events();" style="cursor: pointer;">More...</span></h3>
