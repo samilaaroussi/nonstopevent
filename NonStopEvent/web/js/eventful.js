@@ -100,8 +100,8 @@ function addPlaces(type, radius) {
                              (function (f_id) {
                                  return function(data)
                                  {
-                                    tips = data.response.tips.items;
-                                    count = data.response.tips.count;
+                                    var tips = data.response.tips.items;
+                                    var count = data.response.tips.count;
                                     if(tips)
                                     {
                                         
@@ -136,17 +136,24 @@ function addPlaces(type, radius) {
                                                                      time: unix_time,
                                                                      text: tips[i].text});
                                         }
+                                        /*
                                         var div = document.getElementById('f' + f_id);
                                         if(div)
                                         {
                                             div.setAttribute("nb_reviews",count);
+                                            var span = document.getElementById('f'+f_id+"_span");
+                                            if(span)
+                                            {
+                                                span.innerHTML = count;
+                                            }
                                         }
+                                         */
                                     }
-                                    
+                                    showPlace("f" + f_id);
                                  }
 
                                 }(f_id)));
-                                showPlace("f" + f_id);
+                                
                         }
                     );
                 }
@@ -563,7 +570,7 @@ function showPlace(place_id)
         reviews_button.setAttribute("class","btn btn-default");
         reviews_button.setAttribute("data-toggle","modal");
         reviews_button.setAttribute("data-target","#reviews");
-        reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews<span class='badge'>" + nb_reviews + "</span>";
+        reviews_button.innerHTML = "<i class='fa fa-comments'></i> Reviews<span id ='" +   place_id + "_span' class='badge'>" + nb_reviews + "</span>";
         //staring(rating) div
         var rating_div = document.createElement('span');
         rating_div.setAttribute('class', 'ratingText');
@@ -592,7 +599,7 @@ function showPlace(place_id)
                 var rating_aspect_div = document.createElement("div");
                 rating_aspect_div.setAttribute("class","progress");
                 var rating_pourcentage = rating / 30 * 100;
-                rating_aspect_div.innerHTML = "<div class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width:"+ rating_pourcentage+ "%\">"
+                rating_aspect_div.innerHTML = "<div  class=\"progress-bar progress-bar-striped active\" role=\"progressbar\" style=\"width:"+ rating_pourcentage+ "%\">"
                         + aspect + ": " + rating/30 *5 + "/5</div>";
 
                 rating_div.appendChild(rating_aspect_div);
@@ -1103,7 +1110,7 @@ function timeConverter(UNIX_timestamp){
 
 function searchExpedia(radius)
 {
-    console.log(radius);
+
     var descDiv = document.getElementById('desc');
     var latitude = parseFloat(descDiv.getAttribute("latitude"));
     var longitude = parseFloat(descDiv.getAttribute("longitude"));
